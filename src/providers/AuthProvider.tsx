@@ -26,13 +26,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const savedToken = localStorage.getItem('token');
     if (savedToken) {
       setToken(savedToken);
-      fetchProfile(savedToken);
+      fetchProfile();
     } else {
       setIsLoading(false);
     }
   }, []);
 
-  const fetchProfile = async (tk: string) => {
+  const fetchProfile = async () => {
     try {
       const response = await api.get('/auth/profile');
       if (response.data.success) {
@@ -49,7 +49,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = (newToken: string) => {
     localStorage.setItem('token', newToken);
     setToken(newToken);
-    fetchProfile(newToken);
+    fetchProfile();
     router.push('/dashboard');
   };
 

@@ -28,14 +28,14 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = async (data: LoginFormData) => {
+  const onSubmit = async (_data: LoginFormData) => {
     try {
       // Logic for login API call would go here
       // For now, simulating with a timeout
       await new Promise((resolve) => setTimeout(resolve, 1000));
       login('fake_token');
       toast.success('Successfully logged in!');
-    } catch (error) {
+    } catch (_error) {
       toast.error('Invalid credentials');
     }
   };
