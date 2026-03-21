@@ -17,12 +17,12 @@ export const useJobs = () => {
       const response = await axios.get(`${API_BASE_URL}/jobs`, {
         params: query,
       });
-      return response.data.data as {
-        jobs: IJob[];
-        total: number;
-        page: number;
-        limit: number;
-        totalPages: number;
+      return {
+        jobs: response.data.data as IJob[],
+        total: response.data.meta?.total || 0,
+        page: response.data.meta?.page || 1,
+        limit: response.data.meta?.limit || 10,
+        totalPages: Math.ceil((response.data.meta?.total || 0) / (response.data.meta?.limit || 10)) || 1,
       };
     },
   });
@@ -46,7 +46,7 @@ export const useRelatedJobs = (category: string, currentJobId: string) => {
       const response = await axios.get(`${API_BASE_URL}/jobs`, {
         params: { category, limit: 4 }, // We'll filter out current job in UI
       });
-      return response.data.data.jobs as IJob[];
+      return response.data.data as IJob[];
     },
     enabled: !!category,
   });
