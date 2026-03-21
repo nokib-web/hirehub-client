@@ -101,91 +101,91 @@ const FeaturedJobs = () => {
 };
 
 // Real relevant mock data for demonstration
-const mockJobs = [
+const mockJobs: any[] = [
   {
     _id: "1",
-    companyName: "Google",
+    company: "Google",
     title: "Senior Frontend Engineer (React)",
     location: "Mountain View, CA",
     type: "Full-time",
-    salaryRange: "$150k - $220k",
+    salary: { min: 150000, max: 220000, currency: 'USD', period: 'yearly' },
     skills: ["React", "TypeScript", "Next.js"],
     createdAt: new Date().toISOString(),
     isFeatured: true
   },
   {
     _id: "2",
-    companyName: "Meta",
+    company: "Meta",
     title: "UI Designer",
     location: "Remote",
     type: "Remote",
-    salaryRange: "$120k - $180k",
+    salary: { min: 120000, max: 180000, currency: 'USD', period: 'yearly' },
     skills: ["Figma", "Prototyping", "Design Systems"],
     createdAt: new Date(Date.now() - 86400000).toISOString(),
     isFeatured: true
   },
   {
     _id: "3",
-    companyName: "Amazon",
+    company: "Amazon",
     title: "Backend Developer (Node.js)",
     location: "Seattle, WA",
     type: "Contract",
-    salaryRange: "$130k - $190k",
+    salary: { min: 130000, max: 190000, currency: 'USD', period: 'yearly' },
     skills: ["Node.js", "AWS", "DynamoDB"],
     createdAt: new Date(Date.now() - 172800000).toISOString(),
     isFeatured: true
   },
   {
     _id: "4",
-    companyName: "Netflix",
+    company: "Netflix",
     title: "Data Scientist",
     location: "Los Gatos, CA",
     type: "Full-time",
-    salaryRange: "$160k - $250k",
+    salary: { min: 160000, max: 250000, currency: 'USD', period: 'yearly' },
     skills: ["Python", "Machine Learning", "PyTorch"],
     createdAt: new Date(Date.now() - 259200000).toISOString(),
     isFeatured: true
   },
   {
     _id: "5",
-    companyName: "Stripe",
+    company: "Stripe",
     title: "Product Manager",
     location: "San Francisco, CA",
     type: "Full-time",
-    salaryRange: "$170k - $230k",
+    salary: { min: 170000, max: 230000, currency: 'USD', period: 'yearly' },
     skills: ["Strategy", "Product Roadmap", "Analytics"],
     createdAt: new Date(Date.now() - 345600000).toISOString(),
     isFeatured: true
   },
   {
     _id: "6",
-    companyName: "Tesla",
+    company: "Tesla",
     title: "Automotive Software Engineer",
     location: "Palo Alto, CA",
     type: "Full-time",
-    salaryRange: "$140k - $210k",
+    salary: { min: 140000, max: 210000, currency: 'USD', period: 'yearly' },
     skills: ["C++", "Embedded Systems", "RTOS"],
     createdAt: new Date(Date.now() - 432000000).toISOString(),
     isFeatured: true
   },
   {
     _id: "7",
-    companyName: "Microsoft",
+    company: "Microsoft",
     title: "Solution Architect (Azure)",
     location: "Redmond, WA",
     type: "Full-time",
-    salaryRange: "$160k - $240k",
+    salary: { min: 160000, max: 240000, currency: 'USD', period: 'yearly' },
     skills: ["Cloud", "DevOps", "Kubernetes"],
     createdAt: new Date(Date.now() - 518400000).toISOString(),
     isFeatured: true
   },
   {
     _id: "8",
-    companyName: "Airbnb",
+    company: "Airbnb",
     title: "Mobile App Developer",
     location: "Remote",
     type: "Hybrid",
-    salaryRange: "$150k - $200k",
+    salary: { min: 150000, max: 200000, currency: 'USD', period: 'yearly' },
     skills: ["React Native", "iOS", "Android"],
     createdAt: new Date(Date.now() - 604800000).toISOString(),
     isFeatured: true

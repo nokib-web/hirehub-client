@@ -5,30 +5,20 @@ import { motion } from 'framer-motion';
 import { MapPin, Clock, Bookmark, DollarSign } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
+import { IJob } from '@/types/job';
 
 interface JobCardProps {
-  job: {
-    _id: string;
-    companyName: string;
-    companyLogo?: string;
-    title: string;
-    location: string;
-    type: string;
-    salaryRange: string;
-    skills: string[];
-    createdAt: string;
-    isFeatured?: boolean;
-  };
+  job: IJob;
 }
 
 const JobCard: React.FC<JobCardProps> = ({ job }) => {
   const { 
-    companyName, 
+    company, 
     companyLogo, 
     title, 
     location, 
     type, 
-    salaryRange, 
+    salary, 
     skills, 
     createdAt,
     isFeatured 
@@ -39,6 +29,7 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
   const timeAgo = daysAgo === 0 ? 'Today' : `${daysAgo}d ago`;
 
   // Get first letter of company name for avatar if logo is missing
+  const companyName = company || 'Unknown';
   const initial = companyName.charAt(0).toUpperCase();
   const avatarColors = [
     'bg-blue-100 text-blue-600',
@@ -48,6 +39,11 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
     'bg-rose-100 text-rose-600',
   ];
   const avatarColor = avatarColors[companyName.length % avatarColors.length];
+
+  // Format salary
+  const salaryDisplay = typeof salary === 'string' 
+    ? salary 
+    : `$${(salary?.min || 0).toLocaleString()} - $${(salary?.max || 0).toLocaleString()}`;
 
   return (
     <motion.div 
@@ -98,7 +94,7 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
 
       <div className="mb-4">
         <span className="text-emerald-600 dark:text-emerald-500 font-bold text-lg">
-          {salaryRange}
+          {salaryDisplay}
         </span>
       </div>
 
