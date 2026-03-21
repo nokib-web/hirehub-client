@@ -34,7 +34,7 @@ export default function MyApplications() {
       case 'shortlisted':
         return <Badge className="bg-purple-100 text-purple-700 border border-purple-200 uppercase tracking-widest text-[10px] px-2 py-0.5 font-bold">Shortlisted 🎉</Badge>;
       case 'rejected':
-        return <Badge variant="destructive" className="uppercase tracking-widest text-[10px] px-2 py-0.5 font-bold bg-rose-100 text-rose-700 border border-rose-200">Not Selected</Badge>;
+        return <Badge variant="error" className="uppercase tracking-widest text-[10px] px-2 py-0.5 font-bold bg-rose-100 text-rose-700 border border-rose-200">Not Selected</Badge>;
       case 'hired':
         return <Badge className="bg-emerald-100 text-emerald-700 border border-emerald-200 uppercase tracking-widest text-[10px] px-2 py-0.5 font-bold">Hired! 🎉</Badge>;
       default:
