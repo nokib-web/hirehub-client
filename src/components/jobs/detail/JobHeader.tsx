@@ -28,7 +28,7 @@ export default function JobHeader({ job }: JobHeaderProps) {
         <div className="flex flex-col sm:flex-row gap-6 items-start">
           <div className="w-24 h-24 rounded-2xl bg-primary/10 flex items-center justify-center text-primary font-bold text-3xl border-2 border-primary/20 shadow-sm relative overflow-hidden group">
             <div className="absolute inset-0 bg-primary/5 group-hover:bg-primary/10 transition-colors" />
-            <span className="relative z-10">{job.company.charAt(0)}</span>
+            <span className="relative z-10">{(job.company || 'U').charAt(0)}</span>
           </div>
           
           <div className="space-y-3">

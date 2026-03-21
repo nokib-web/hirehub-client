@@ -26,7 +26,7 @@ export default function JobCard({ job }: JobCardProps) {
         {/* Company Logo */}
         <div className="flex-shrink-0">
           <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-bold text-xl uppercase border border-primary/20">
-            {job.company.charAt(0)}
+            {(job.company || 'U').charAt(0)}
           </div>
         </div>
 
@@ -73,7 +73,7 @@ export default function JobCard({ job }: JobCardProps) {
             </div>
             <div className="flex items-center gap-1.5 text-sm font-semibold text-primary border-l border-border pl-4">
               <DollarSign className="w-4 h-4" />
-              {job.salary.min.toLocaleString()} - {job.salary.max.toLocaleString()} / {job.salary.period}
+              {job.salary ? `${job.salary.min?.toLocaleString() || 0} - ${job.salary.max?.toLocaleString() || 0} / ${job.salary.period || 'yearly'}` : 'Salary not provided'}
             </div>
           </div>
 

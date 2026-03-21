@@ -31,8 +31,8 @@ export default function Sidebar({ job, onApply }: SidebarProps) {
                <p className="text-xs font-black text-primary uppercase tracking-widest leading-none">Expected Salary</p>
                <h3 className="text-2xl font-black text-foreground flex items-center gap-1.5 pt-1">
                  <DollarSign className="w-6 h-6 text-primary" strokeWidth={3} />
-                 {job.salary.min.toLocaleString()} - {job.salary.max.toLocaleString()}
-                 <span className="text-sm font-bold text-muted-foreground uppercase opacity-60">/ {job.salary.period}</span>
+                 {job.salary?.min?.toLocaleString() || 0} - {job.salary?.max?.toLocaleString() || 0}
+                 <span className="text-sm font-bold text-muted-foreground uppercase opacity-60">/ {job.salary?.period || 'yearly'}</span>
                </h3>
             </div>
 
