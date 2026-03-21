@@ -1,36 +1,70 @@
 'use client';
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Users, Briefcase, Building2, CheckCircle2 } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { motion, useMotionValue, useSpring, useInView } from 'framer-motion';
 
 const stats = [
-  { name: 'Active Users', value: '45k+', icon: Users, color: 'text-primary' },
-  { name: 'Total Jobs', value: '12k+', icon: Briefcase, color: 'text-secondary' },
-  { name: 'Companies', value: '3,200', icon: Building2, color: 'text-accent' },
-  { name: 'Applications', value: '250k+', icon: CheckCircle2, color: 'text-emerald-500' },
+  { label: 'Jobs Listed', value: 50000, suffix: '+' },
+  { label: 'Companies', value: 10000, suffix: '+' },
+  { label: 'Job Seekers', value: 200000, suffix: '+' },
+  { label: 'Hiring Success Rate', value: 95, suffix: '%' },
 ];
+
+const AnimatedCounter = ({ value, suffix }: { value: number; suffix: string }) => {
+  const [displayValue, setDisplayValue] = useState(0);
+  const ref = React.useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  
+  const motionValue = useMotionValue(0);
+  const springValue = useSpring(motionValue, {
+    damping: 30,
+    stiffness: 100,
+  });
+
+  useEffect(() => {
+    if (isInView) {
+      motionValue.set(value);
+    }
+  }, [isInView, value, motionValue]);
+
+  useEffect(() => {
+    return springValue.on("change", (latest) => {
+      setDisplayValue(Math.floor(latest));
+    });
+  }, [springValue]);
+
+  return (
+    <span ref={ref}>
+      {displayValue.toLocaleString()}
+      {suffix}
+    </span>
+  );
+};
 
 const StatsSection = () => {
   return (
-    <section className="bg-card w-full py-12 border-b border-border shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+    <section className="relative py-24 overflow-hidden">
+      {/* Background with blue-violet gradient */}
+      <div className="absolute inset-0 bg-gradient-to-r from-blue-700 via-blue-800 to-violet-800">
+        <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
+      </div>
+
+      <div className="container relative z-10 px-4 mx-auto">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 text-center text-white">
           {stats.map((stat, index) => (
             <motion.div
-              key={stat.name}
-              initial={{ opacity: 0, y: 10 }}
+              key={stat.label}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="flex flex-col items-center text-center space-y-2 p-6 rounded-2xl bg-background border border-border/50 hover:shadow-md transition-shadow"
+              transition={{ delay: index * 0.1, duration: 0.6 }}
+              className="space-y-4"
             >
-              <div className={`p-3 rounded-xl bg-card border border-border ${stat.color}`}>
-                <stat.icon className="w-6 h-6" />
-              </div>
-              <p className="text-3xl font-bold text-foreground">{stat.value}</p>
-              <p className="text-sm font-medium text-foreground/50 tracking-wide uppercase">
-                {stat.name}
+              <h3 className="text-4xl md:text-6xl font-extrabold tracking-tight">
+                <AnimatedCounter value={stat.value} suffix={stat.suffix} />
+              </h3>
+              <p className="text-blue-100/70 text-lg font-medium uppercase tracking-[3px] text-sm">
+                {stat.label}
               </p>
             </motion.div>
           ))}

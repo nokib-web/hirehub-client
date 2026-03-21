@@ -1,28 +1,34 @@
 'use client';
 
 import React from 'react';
-import Navbar from '@/components/shared/Navbar';
-import Footer from '@/components/shared/Footer';
 import HeroSection from '@/components/home/HeroSection';
-import StatsSection from '@/components/home/StatsSection';
 import FeaturedJobs from '@/components/home/FeaturedJobs';
 import CategorySection from '@/components/home/CategorySection';
+import StatsSection from '@/components/home/StatsSection';
 import HowItWorksSection from '@/components/home/HowItWorksSection';
+import TopCompanies from '@/components/home/TopCompanies';
+import TestimonialsSection from '@/components/home/TestimonialsSection';
+import BlogSection from '@/components/home/BlogSection';
 import NewsletterSection from '@/components/home/NewsletterSection';
+import FAQSection from '@/components/home/FAQSection';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <Navbar />
-      <main className="flex-1">
-        <HeroSection />
-        <StatsSection />
-        <CategorySection />
-        <FeaturedJobs />
-        <HowItWorksSection />
-        <NewsletterSection />
-      </main>
-      <Footer />
+    <div className="flex flex-col w-full overflow-x-hidden">
+      {/* 
+         Sections are already wrapped with framer-motion in-view animations.
+         Navbar and Footer are handled by LayoutWrapper.
+      */}
+      <HeroSection />
+      <FeaturedJobs />
+      <CategorySection />
+      <StatsSection />
+      <HowItWorksSection />
+      <TopCompanies />
+      <TestimonialsSection />
+      <BlogSection />
+      <NewsletterSection />
+      <FAQSection />
     </div>
   );
 }

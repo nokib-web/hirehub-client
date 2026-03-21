@@ -1,13 +1,21 @@
-'use client';
-
 import React from 'react';
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
-const Skeleton = () => {
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
+function Skeleton({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className='p-4 border border-dashed border-border rounded-lg bg-card text-foreground/50 text-sm'>
-      Skeleton Component Placeholder
-    </div>
+    <div
+      className={cn('animate-pulse rounded-md bg-muted/20', className)}
+      {...props}
+    />
   );
-};
+}
 
 export default Skeleton;
