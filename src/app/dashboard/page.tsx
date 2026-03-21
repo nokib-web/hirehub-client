@@ -1,19 +1,32 @@
-import React from 'react';
+'use client';
 
-export default function DashboardPage() {
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/providers/AuthProvider';
+import ProtectedRoute from '@/components/shared/ProtectedRoute';
+import { Loader2 } from 'lucide-react';
+
+export default function DashboardRedirect() {
+  const { user, isLoading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && user) {
+      if (user.role === 'jobseeker') {
+        router.push('/dashboard/profile');
+      } else if (user.role === 'employer') {
+        router.push('/dashboard/my-jobs');
+      } else if (user.role === 'admin') {
+        router.push('/dashboard/overview');
+      }
+    }
+  }, [user, isLoading, router]);
+
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="bg-card p-6 rounded-3xl border border-border shadow-sm">
-            <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-2">Stat {i}</h3>
-            <p className="text-3xl font-black text-primary">--</p>
-          </div>
-        ))}
+    <ProtectedRoute>
+      <div className="w-full h-[60vh] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
-      <div className="bg-card h-96 rounded-3xl border border-border flex items-center justify-center text-muted-foreground font-medium">
-        Overview Chart Placeholder
-      </div>
-    </div>
+    </ProtectedRoute>
   );
 }
