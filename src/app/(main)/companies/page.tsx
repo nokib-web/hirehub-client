@@ -1,8 +1,3 @@
-export const metadata = {
-  title: "Companies | HireHub",
-  description: "Discover top tech companies and startups hiring on HireHub.",
-};
-
 import React from 'react';
 import { Search, MapPin, Users, Briefcase } from 'lucide-react';
 import Button from '@/components/ui/Button';

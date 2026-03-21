@@ -1,8 +1,3 @@
-export const metadata = {
-  title: "Blog | HireHub",
-  description: "Career advice, interview tips, and recruitment industry trends.",
-};
-
 import React from 'react';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';

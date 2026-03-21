@@ -1,8 +1,3 @@
-export const metadata = {
-  title: "About Us | HireHub",
-  description: "Learn more about our mission, vision, and the team building HireHub.",
-};
-
 import React from 'react';
 import { Target, Users, Zap, Shield, Trophy, LayoutGrid, Heart, Coffee } from 'lucide-react';
 import Image from 'next/image';
