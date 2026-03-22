@@ -2,9 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, X, Send, User, ChevronDown } from 'lucide-react';
-import Button from '@/components/ui/Button';
-import toast from 'react-hot-toast';
+import { Sparkles, X, Send, ChevronDown } from 'lucide-react';
 import api from '@/lib/axios';
 
 type Message = {
@@ -26,7 +24,6 @@ export default function AIChatbot() {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        // parse dates back
         setHistory(parsed.map((m: any) => ({ ...m, timestamp: new Date(m.timestamp) })));
       } catch (e) {
         console.error(e);
@@ -51,25 +48,22 @@ export default function AIChatbot() {
     "What jobs match my React skills?",
     "How do I prepare for interviews?",
     "Tips for salary negotiation",
-    "How to improve my resume?"
+    "How to improve my resume?",
   ];
 
   const handleSend = async (text: string) => {
     if (!text.trim()) return;
-    
+
     const userMsg: Message = { role: 'user', parts: text, timestamp: new Date() };
     const newHistory = [...history, userMsg];
-    
     setHistory(newHistory);
     setInput('');
     setIsTyping(true);
 
     try {
-      // Backend expects: { message: "...", history: [ { role, parts: [{text}] } ] } -> actually Gemini requires `{ role, parts: [{ text }] }`
-      // I will send the pure array for backend to map it.
       const formattedHistory = history.map(h => ({
         role: h.role,
-        parts: h.parts // Our backend /api/ai/chat usually expects string or object, we'll send it as stored
+        parts: h.parts
       }));
 
       const res = await api.post('/ai/chat', { 
@@ -84,7 +78,12 @@ export default function AIChatbot() {
         throw new Error('Invalid response');
       }
     } catch (error) {
-      const errorMsg: Message = { role: 'model', parts: "Sorry, I'm having trouble connecting right now. Please try again later.", timestamp: new Date() };
+      console.error('Chat error:', error);
+      const errorMsg: Message = { 
+        role: 'model', 
+        parts: "Sorry, I'm having trouble connecting to the AI service right now. Please check if the OpenAI API Key is set correctly.", 
+        timestamp: new Date() 
+      };
       setHistory(prev => [...prev, errorMsg]);
     } finally {
       setIsTyping(false);
@@ -116,8 +115,8 @@ export default function AIChatbot() {
             initial={{ opacity: 0, y: 50, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 50, scale: 0.95 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed bottom-6 right-6 w-[350px] h-[500px] bg-card border border-border shadow-2xl rounded-3xl z-50 flex flex-col overflow-hidden bottom-safe max-w-[calc(100vw-3rem)]"
+            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            className="fixed bottom-6 right-6 w-[350px] h-[500px] bg-card border border-border shadow-2xl rounded-3xl z-50 flex flex-col overflow-hidden max-w-[calc(100vw-3rem)]"
           >
             {/* Header */}
             <div className="bg-primary p-4 flex items-center justify-between text-white shrink-0">
@@ -133,7 +132,7 @@ export default function AIChatbot() {
                   <p className="text-[10px] text-white/80 font-bold uppercase tracking-wider">Career Assistant</p>
                 </div>
               </div>
-              <button 
+              <button
                 onClick={() => setIsOpen(false)}
                 className="w-8 h-8 flex items-center justify-center hover:bg-white/20 rounded-full transition-colors"
               >
@@ -151,10 +150,10 @@ export default function AIChatbot() {
                     </div>
                     <h4 className="font-black text-foreground">How can I help you today?</h4>
                     <p className="text-xs text-muted-foreground font-medium px-4">
-                      I'm your personal AI career agent. Ask me anything about your job search.
+                      I'm your personal AI career agent powered by GPT-4. Ask me anything.
                     </p>
                   </div>
-                  
+
                   <div className="space-y-2">
                     {suggestedPrompts.map((prompt, i) => (
                       <button
@@ -176,15 +175,15 @@ export default function AIChatbot() {
                     <div key={i} className={`flex w-full ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                       <div className={`flex gap-2 max-w-[85%] ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
                         {msg.role === 'model' && (
-                           <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-1">
-                             <Sparkles className="w-4 h-4 text-primary" />
-                           </div>
+                          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-1">
+                            <Sparkles className="w-4 h-4 text-primary" />
+                          </div>
                         )}
                         <div className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
-                          <div 
+                          <div
                             className={`p-3 rounded-2xl text-sm shadow-sm ${
-                              msg.role === 'user' 
-                                ? 'bg-primary text-white rounded-tr-sm' 
+                              msg.role === 'user'
+                                ? 'bg-primary text-white rounded-tr-sm'
                                 : 'bg-card border border-border text-foreground rounded-tl-sm'
                             }`}
                           >
@@ -197,7 +196,7 @@ export default function AIChatbot() {
                       </div>
                     </div>
                   ))}
-                  
+
                   {isTyping && (
                     <div className="flex w-full justify-start">
                       <div className="flex gap-2 max-w-[85%] flex-row">
@@ -205,9 +204,9 @@ export default function AIChatbot() {
                           <Sparkles className="w-4 h-4 text-primary" />
                         </div>
                         <div className="p-4 bg-card border border-border rounded-2xl rounded-tl-sm flex items-center gap-1 shadow-sm h-10 w-16">
-                           <div className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                           <div className="w-1.5 h-1.5 bg-primary/60 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                           <div className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                          <div className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                          <div className="w-1.5 h-1.5 bg-primary/60 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                          <div className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                         </div>
                       </div>
                     </div>
@@ -219,7 +218,7 @@ export default function AIChatbot() {
 
             {/* Input Form */}
             <div className="p-3 bg-card border-t border-border flex flex-col gap-2 shrink-0">
-              <form 
+              <form
                 onSubmit={(e) => { e.preventDefault(); handleSend(input); }}
                 className="flex items-center gap-2 relative"
               >
@@ -240,7 +239,7 @@ export default function AIChatbot() {
                 </button>
               </form>
               <p className="text-[9px] text-center text-muted-foreground font-black uppercase tracking-widest mt-1">
-                Powered by Gemini AI ✦
+                Powered by OpenAI GPT-4 ✦
               </p>
             </div>
           </motion.div>

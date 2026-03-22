@@ -100,7 +100,7 @@ const Navbar = () => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
-                    className="absolute top-full -left-20 w-[600px] bg-card border border-border rounded-2xl shadow-2xl p-6 overflow-hidden"
+                    className="absolute top-full -left-20 w-[600px] bg-card border border-border rounded-2xl shadow-2xl p-6 overflow-hidden z-[200]"
                   >
                     <div className="grid grid-cols-3 gap-8">
                       {/* Categories */}

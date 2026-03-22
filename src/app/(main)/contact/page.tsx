@@ -50,7 +50,7 @@ export default function ContactPage() {
                     <motion.form 
                       key="form"
                       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                      onSubmit={handleSubmit(onSubmit)} className="space-y-6 flex flex-col relative z-10"
+                      onSubmit={handleSubmit(onSubmit)} className="space-y-6 flex flex-col relative"
                     >
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div>
