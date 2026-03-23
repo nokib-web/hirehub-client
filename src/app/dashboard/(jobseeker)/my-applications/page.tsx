@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
 import { Briefcase, Building2, MapPin, DollarSign, ExternalLink, XCircle, SearchX } from 'lucide-react';
+import { IApplication, IJob } from '@/types';
 import Link from 'next/link';
 
 type AppStatus = 'all' | 'pending' | 'reviewed' | 'shortlisted' | 'rejected' | 'hired';
@@ -21,7 +22,7 @@ export default function MyApplications() {
     queryFn: async () => {
       // Backend automatically filters to requesting user
       const response = await api.get('/applications');
-      return response.data.data;
+      return response.data.data as IApplication[];
     }
   });
 
@@ -42,10 +43,10 @@ export default function MyApplications() {
     }
   };
 
-  const applications = Array.isArray(data) ? data : data?.applications || [];
+  const applications = (Array.isArray(data) ? data : (data as any)?.applications || []) as IApplication[];
   const filteredApps = activeTab === 'all' 
     ? applications 
-    : applications.filter((app: any) => app.status.toLowerCase() === activeTab);
+    : applications.filter((app: IApplication) => app.status.toLowerCase() === activeTab);
 
   const tabs = ['All', 'Pending', 'Reviewed', 'Shortlisted', 'Rejected', 'Hired'];
 
@@ -100,15 +101,16 @@ export default function MyApplications() {
             </div>
           ) : (
             <AnimatePresence>
-              {filteredApps.map((app: any, idx: number) => {
-                const job = app.job || {};
+            {filteredApps.map((app: IApplication, idxValue: number) => {
+                const job = app.job as IJob;
                 const appliedDate = new Date(app.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                const appId = app.id || app._id;
                 
                 return (
                   <motion.div 
                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.98 }}
-                    transition={{ delay: idx * 0.05 }}
-                    key={app._id}
+                    transition={{ delay: idxValue * 0.05 }}
+                    key={appId}
                     className="bg-card border border-border rounded-2xl p-5 md:p-6 shadow-sm hover:border-primary/30 transition-all flex flex-col sm:flex-row gap-6 relative group"
                   >
                     <div className="w-16 h-16 shrink-0 bg-primary/10 rounded-2xl flex items-center justify-center font-black text-2xl text-primary border border-primary/20">

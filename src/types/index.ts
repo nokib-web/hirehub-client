@@ -8,33 +8,56 @@ export interface IUser {
   avatar?: string;
   headline?: string;
   location?: string;
+  company?: string;
+  bio?: string;
+  skills?: string[];
+  isActive: boolean;
   createdAt: string;
 }
 
 export interface IJob {
   id: string;
+  _id?: string;
   title: string;
   company: string;
+  companyLogo?: string;
   location: string;
+  locationType: 'Remote' | 'On-site' | 'Hybrid';
   type: string;
-  salary: string;
   category: string;
+  salary: {
+    min: number;
+    max: number;
+    currency: string;
+    period: 'hourly' | 'monthly' | 'yearly';
+  };
   description: string;
   requirements: string[];
+  responsibilities?: string[];
   skills: string[];
+  benefits?: string[];
+  experience: string;
   deadline: string;
-  status: 'open' | 'closed';
-  createdBy: string;
+  status: 'active' | 'closed' | 'draft';
+  applicantsCount: number;
+  views: number;
+  isFeatured: boolean;
+  createdBy: string | IUser;
   createdAt: string;
 }
 
 export interface IApplication {
   id: string;
+  _id?: string;
   jobId: string;
-  userId: string;
-  resume: string;
+  userId: string | IUser;
+  job?: IJob;
+  user?: IUser;
+  resumeUrl: string;
   coverLetter: string;
+  portfolioUrl?: string;
   status: 'pending' | 'reviewed' | 'shortlisted' | 'rejected' | 'hired';
+  appliedAt: string;
   createdAt: string;
 }
 

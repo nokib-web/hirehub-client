@@ -7,7 +7,6 @@ import { motion } from 'framer-motion';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import { Camera, MapPin, Briefcase, Plus, X } from 'lucide-react';
-import { useForm } from 'react-form'; // Assuming standard handling, let's use plain state for speed or react-hook-form
 import toast from 'react-hot-toast';
 import api from '@/lib/axios';
 
@@ -17,10 +16,10 @@ export default function JobSeekerProfile() {
   
   const [formData, setFormData] = useState({
     name: user?.name || '',
-    headline: '',
-    location: '',
-    bio: '',
-    skills: [] as string[]
+    headline: user?.headline || '',
+    location: user?.location || '',
+    bio: user?.bio || '',
+    skills: user?.skills || [] as string[]
   });
   
   const [skillInput, setSkillInput] = useState('');
@@ -44,7 +43,7 @@ export default function JobSeekerProfile() {
     if (!user) return;
     setIsSaving(true);
     try {
-      await api.patch(`/users/${(user as any)._id || user.id}`, formData);
+      await api.patch(`/users/${user.id}`, formData);
       toast.success('Profile updated! ✓');
     } catch (error) {
       toast.error('Failed to update profile');

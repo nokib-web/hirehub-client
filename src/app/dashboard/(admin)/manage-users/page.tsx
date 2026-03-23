@@ -9,6 +9,7 @@ import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
+import { IUser } from '@/types';
 
 export default function ManageUsers() {
   const queryClient = useQueryClient();
@@ -19,18 +20,18 @@ export default function ManageUsers() {
     queryKey: ['admin-users'],
     queryFn: async () => {
       const res = await api.get('/users/all'); // Assuming backend route added by user or existing
-      return res.data.data;
+      return res.data.data as IUser[];
     }
   });
 
-  const users = data || [
+  const users = data || ([
     // Provide a mocked list temporarily incase route doesn't exist to ensure UI works
-    { _id: '1', name: 'Admin One', email: 'admin@example.com', role: 'admin', active: true, createdAt: new Date() },
-    { _id: '2', name: 'John Seeker', email: 'john@example.com', role: 'jobseeker', active: true, createdAt: new Date() },
-    { _id: '3', name: 'Tech Corp', email: 'hr@techcorp.com', role: 'employer', active: false, createdAt: new Date() }
-  ];
+    { id: '1', name: 'Admin One', email: 'admin@example.com', role: 'admin', isActive: true, createdAt: new Date().toISOString() },
+    { id: '2', name: 'John Seeker', email: 'john@example.com', role: 'jobseeker', isActive: true, createdAt: new Date().toISOString() },
+    { id: '3', name: 'Tech Corp', email: 'hr@techcorp.com', role: 'employer', isActive: false, createdAt: new Date().toISOString() }
+  ] as IUser[]);
 
-  const filteredUsers = users.filter((u: any) => {
+  const filteredUsers = users.filter((u: IUser) => {
     const matchesSearch = u.name?.toLowerCase().includes(searchTerm.toLowerCase()) || u.email?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesRole = roleFilter === 'All' || u.role === roleFilter.toLowerCase();
     return matchesSearch && matchesRole;
@@ -38,7 +39,7 @@ export default function ManageUsers() {
 
   const toggleStatus = async (id: string, currentStatus: boolean) => {
     try {
-      await api.patch(`/users/${id}`, { active: !currentStatus });
+      await api.patch(`/users/${id}`, { isActive: !currentStatus });
       toast.success(currentStatus ? 'User deactivated' : 'User activated');
       queryClient.invalidateQueries({ queryKey: ['admin-users'] });
     } catch {
@@ -108,8 +109,8 @@ export default function ManageUsers() {
                  </tr>
                </thead>
                <tbody className="divide-y divide-border/50">
-                 {filteredUsers.map((user: any) => (
-                   <motion.tr key={user._id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="hover:bg-muted/20 hover:shadow-inner transition-all group">
+                 {filteredUsers.map((user: IUser) => (
+                   <motion.tr key={user.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="hover:bg-muted/20 hover:shadow-inner transition-all group">
                      <td className="px-6 py-4">
                        <div className="flex items-center gap-4">
                          <div className="w-10 h-10 rounded-full bg-primary/10 text-primary font-black flex items-center justify-center shrink-0">
@@ -127,8 +128,8 @@ export default function ManageUsers() {
                        </Badge>
                      </td>
                      <td className="px-6 py-4 text-center">
-                       <button onClick={() => toggleStatus(user._id, user.active !== false)}>
-                         {user.active !== false ? (
+                       <button onClick={() => toggleStatus(user.id, user.isActive !== false)}>
+                         {user.isActive !== false ? (
                            <Badge className="bg-emerald-100 text-emerald-700 border-none font-bold uppercase tracking-widest text-[9px] px-2 py-0.5"><CheckCircle2 className="w-3 h-3 mr-1"/> Active</Badge>
                          ) : (
                            <Badge className="bg-rose-100 text-rose-700 border-none font-bold uppercase tracking-widest text-[9px] px-2 py-0.5">Inactive</Badge>
@@ -142,7 +143,7 @@ export default function ManageUsers() {
                        <div className="flex justify-end pr-2 opacity-50 space-x-2 group-hover:opacity-100 transition-opacity">
                           <select 
                             value={user.role}
-                            onChange={(e) => changeRole(user._id, e.target.value)}
+                            onChange={(e) => changeRole(user.id, e.target.value)}
                             className="text-xs font-bold border border-input rounded-lg px-2 pl-3 py-1.5 outline-none cursor-pointer hover:bg-muted"
                           >
                              <option value="jobseeker">Jobseeker</option>

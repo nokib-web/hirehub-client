@@ -11,6 +11,7 @@ import Badge from '@/components/ui/Badge';
 import { Briefcase, Building2, MapPin, DollarSign, PenSquare, Eye, XCircle, Search, Edit2, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import { IJob } from '@/types';
 
 export default function MyJobs() {
   const { user } = useAuth();
@@ -21,13 +22,13 @@ export default function MyJobs() {
     queryFn: async () => {
       // API automatically filters by logged-in employer based on token
       const response = await api.get('/jobs', { params: { limit: 100 } }); 
-      return response.data.data;
+      return response.data.data as IJob[];
     }
   });
 
-  const jobs = Array.isArray(data) ? data : data?.jobs || [];
+  const jobs = (Array.isArray(data) ? data : (data as any)?.jobs || []) as IJob[];
   
-  const filteredJobs = jobs.filter((job: any) => 
+  const filteredJobs = jobs.filter((job: IJob) => 
     job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     job.status.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -116,14 +117,14 @@ export default function MyJobs() {
                   </tr>
                 ) : (
                   <AnimatePresence>
-                    {filteredJobs.map((job: any) => (
+                    {filteredJobs.map((job: IJob) => (
                       <motion.tr 
-                        key={job._id}
+                        key={job.id}
                         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                         className="hover:bg-muted/20 transition-colors group"
                       >
                         <td className="px-6 py-4">
-                          <Link href={`/jobs/${job._id}`} className="font-bold text-foreground hover:text-primary transition-colors block text-base truncate max-w-xs">
+                          <Link href={`/jobs/${job.id}`} className="font-bold text-foreground hover:text-primary transition-colors block text-base truncate max-w-xs">
                             {job.title}
                           </Link>
                           <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground font-medium">
@@ -133,7 +134,7 @@ export default function MyJobs() {
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          <button onClick={() => toggleStatus(job._id, job.status)} className="focus:outline-none">
+                          <button onClick={() => toggleStatus(job.id, job.status)} className="focus:outline-none">
                             <Badge variant={job.status === 'active' ? 'primary' : job.status === 'draft' ? 'outline' : 'secondary'} className={`cursor-pointer capitalize text-[10px] tracking-wider px-2 py-0.5 ${job.status === 'active' ? 'bg-emerald-100 text-emerald-700 border border-emerald-200 hover:bg-emerald-200' : ''}`}>
                               {job.status}
                             </Badge>
@@ -147,9 +148,9 @@ export default function MyJobs() {
                         <td className="px-6 py-4 text-muted-foreground font-medium whitespace-nowrap text-xs">
                           {new Date(job.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                         </td>
-                        <td className="px-6 py-4 text-right">
+                         <td className="px-6 py-4 text-right">
                           <div className="flex items-center justify-end gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
-                            <Link href={`/jobs/${job._id}`}>
+                            <Link href={`/jobs/${job.id}`}>
                               <Button variant="outline" size="sm" className="w-8 h-8 p-0 rounded-lg" title="View Public Job">
                                 <Eye className="w-4 h-4 text-muted-foreground hover:text-blue-500" />
                               </Button>
@@ -157,7 +158,7 @@ export default function MyJobs() {
                             <Button variant="outline" size="sm" className="w-8 h-8 p-0 rounded-lg bg-orange-50 hover:bg-orange-100 hover:border-orange-300" title="Edit Job">
                               <Edit2 className="w-3.5 h-3.5 text-orange-600" />
                             </Button>
-                            <Button variant="outline" size="sm" onClick={() => handleDelete(job._id)} className="w-8 h-8 p-0 rounded-lg bg-rose-50 hover:bg-rose-100 hover:border-rose-300" title="Delete Job">
+                            <Button variant="outline" size="sm" onClick={() => handleDelete(job.id)} className="w-8 h-8 p-0 rounded-lg bg-rose-50 hover:bg-rose-100 hover:border-rose-300" title="Delete Job">
                               <Trash2 className="w-4 h-4 text-rose-600" />
                             </Button>
                           </div>

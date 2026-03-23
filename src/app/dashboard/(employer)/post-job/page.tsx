@@ -43,7 +43,7 @@ export default function PostJob() {
   const [isAiLoading, setIsAiLoading] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
 
-  const { register, handleSubmit, control, watch, setValue, formState: { errors }, trigger } = useForm<JobFormValues>({
+  const { register, handleSubmit, watch, setValue, formState: { errors }, trigger } = useForm<JobFormValues>({
     resolver: zodResolver(jobSchema),
     defaultValues: {
       company: user?.company || '',
@@ -63,7 +63,7 @@ export default function PostJob() {
   const formData = watch();
 
   const handleNext = async () => {
-    let fieldsToValidate: any[] = [];
+    let fieldsToValidate: (keyof JobFormValues)[] = [];
     if (step === 1) {
       fieldsToValidate = ['title', 'company', 'location', 'locationType', 'type', 'experience', 'deadline'];
     } else if (step === 2) {
@@ -99,18 +99,18 @@ export default function PostJob() {
     }
   };
 
-  const ArrayInput = ({ name, label }: { name: keyof JobFormValues, label: string }) => {
+  const ArrayInput = ({ name, label }: { name: "requirements" | "responsibilities" | "skills" | "benefits", label: string }) => {
     const list = (watch(name) as string[]) || [];
     const [input, setInput] = useState('');
     
     const add = (e: React.KeyboardEvent) => {
       if (e.key === 'Enter' && input.trim()) {
         e.preventDefault();
-        setValue(name, [...list, input.trim()] as any);
+        setValue(name, [...list, input.trim()]);
         setInput('');
       }
     };
-    const remove = (val: string) => setValue(name, list.filter(i => i !== val) as any);
+    const remove = (val: string) => setValue(name, list.filter(i => i !== val));
 
     return (
       <div className="space-y-2">
