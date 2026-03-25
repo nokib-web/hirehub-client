@@ -162,7 +162,7 @@ export default function JobTabs({ job }: JobTabsProps) {
                </h3>
                <div className="bg-card border border-border/60 p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
                   <p className="text-foreground/80 font-medium leading-relaxed">
-                    Minimum Bachelor's degree in Computer Science, engineering or equivalent experience in the relevant field. 
+                    Minimum Bachelor&apos;s degree in Computer Science, engineering or equivalent experience in the relevant field. 
                     Advanced certifications in cloud or modern frameworks is a huge plus.
                   </p>
                </div>
@@ -205,7 +205,7 @@ export default function JobTabs({ job }: JobTabsProps) {
                <div className="space-y-4 pt-1">
                   <h4 className="text-lg font-bold text-foreground/80">About {job.company}</h4>
                   <p className="text-muted-foreground leading-relaxed">
-                    {job.company} is a leading innovator in the space. We're on a mission to reshape the industry with technology that empowers millions of people worldwide. Join our world-class team.
+                    {job.company} is a leading innovator in the space. We&apos;re on a mission to reshape the industry with technology that empowers millions of people worldwide. Join our world-class team.
                   </p>
                   <Button variant="ghost" className="p-0 text-primary font-bold hover:bg-transparent decoration-2 h-auto gap-2">
                     Visit Website
@@ -314,10 +314,10 @@ export default function JobTabs({ job }: JobTabsProps) {
                          </div>
                       </div>
 
-                      <h4 className="text-lg font-black text-foreground mb-3 leading-tight">"A truly innovative place with great people and growth"</h4>
+                      <h4 className="text-lg font-black text-foreground mb-3 leading-tight">&quot;A truly innovative place with great people and growth&quot;</h4>
                       <p className="text-foreground/70 font-medium leading-relaxed mb-6">
-                        I've been working here for over 2 years and the culture is amazing. The challenges we face keep us engaged and the leadership truly cares about individual growth. 
-                        Best benefits package I've ever had in my career.
+                        I&apos;ve been working here for over 2 years and the culture is amazing. The challenges we face keep us engaged and the leadership truly cares about individual growth. 
+                        Best benefits package I&apos;ve ever had in my career.
                       </p>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
