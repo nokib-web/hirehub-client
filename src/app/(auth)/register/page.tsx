@@ -50,6 +50,7 @@ export default function RegisterPage() {
     setValue,
     formState: { errors },
   } = useForm<RegisterFormValues>({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(registerSchema) as any,
     defaultValues: {
       role: 'jobseeker',

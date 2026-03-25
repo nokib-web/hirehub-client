@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Clock, Bookmark, DollarSign } from 'lucide-react';
+import { MapPin, Clock, Bookmark } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
 import { IJob } from '@/types/job';

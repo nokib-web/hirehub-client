@@ -17,6 +17,7 @@ type FormData = z.infer<typeof schema>;
 
 const NewsletterSection = () => {
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormData>({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(schema) as any,
   });
 

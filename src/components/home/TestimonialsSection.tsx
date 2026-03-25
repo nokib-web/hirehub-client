@@ -115,7 +115,7 @@ const TestimonialsSection = () => {
                 </div>
                 
                 <p className="text-xl md:text-2xl text-zinc-700 dark:text-zinc-300 italic mb-10 leading-relaxed font-medium">
-                  "{testimonials[index].quote}"
+                  &quot;{testimonials[index].quote}&quot;
                 </p>
                 
                 <div className="flex flex-col items-center">

@@ -44,6 +44,7 @@ export default function PostJob() {
   const [isPublishing, setIsPublishing] = useState(false);
 
   const { register, handleSubmit, watch, setValue, formState: { errors }, trigger } = useForm<JobFormValues>({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(jobSchema) as any,
     defaultValues: {
       company: user?.company || '',

@@ -22,6 +22,7 @@ export default function ContactPage() {
   const [isSent, setIsSent] = useState(false);
   
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<ContactForm>({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(contactSchema) as any,
   });
 

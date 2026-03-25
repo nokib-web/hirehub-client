@@ -35,6 +35,7 @@ export default function LoginPage() {
     setValue,
     formState: { errors },
   } = useForm<LoginFormValues>({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(loginSchema) as any,
   });
 

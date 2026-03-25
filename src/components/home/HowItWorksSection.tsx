@@ -43,10 +43,10 @@ const HowItWorksSection = () => {
           </motion.h2>
           
           <div className="inline-flex p-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full border border-zinc-200 dark:border-zinc-700 mx-auto">
-            {['seekers', 'employers'].map((tab) => (
+            {(['seekers', 'employers'] as const).map((tab) => (
               <button
                 key={tab}
-                onClick={() => setActiveTab(tab as any)}
+                onClick={() => setActiveTab(tab)}
                 className={`relative px-8 py-3 rounded-full text-sm font-bold transition-all ${
                   activeTab === tab 
                   ? 'text-white' 
