@@ -3,7 +3,6 @@
 import React from 'react';
 import { useRelatedJobs } from '@/hooks/useJobs';
 import JobCard from '@/components/jobs/JobCard';
-import { IJob } from '@/types/job';
 import { Sparkles } from 'lucide-react';
 
 interface RelatedJobsProps {

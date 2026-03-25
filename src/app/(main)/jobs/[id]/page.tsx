@@ -34,7 +34,7 @@ export default function JobDetailPage() {
         </div>
         <h3 className="text-3xl font-black text-foreground mb-3 leading-tight uppercase tracking-tight">Oops! Job not found</h3>
         <p className="text-muted-foreground max-w-sm mb-8 text-base font-medium leading-relaxed">
-          The job you're looking for might have been closed or removed by the employer.
+          The job you&apos;re looking for might have been closed or removed by the employer.
         </p>
         <Button onClick={() => router.push('/jobs')} className="px-10 h-14 rounded-2xl font-black gap-3 group">
           <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />

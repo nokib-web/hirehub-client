@@ -143,7 +143,7 @@ export default function JobsPage() {
                 </div>
                 <h3 className="text-xl font-bold text-foreground mb-2">No jobs found</h3>
                 <p className="text-muted-foreground max-w-sm mb-6">
-                  We couldn't find any jobs matching your current filter criteria. Try adjusting your filters or clearing them.
+                  We couldn&apos;t find any jobs matching your current filter criteria. Try adjusting your filters or clearing them.
                 </p>
                 <Button onClick={() => window.location.href='/jobs'} variant="outline" className="px-6">
                   Clear All Filters

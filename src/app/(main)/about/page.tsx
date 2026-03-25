@@ -37,7 +37,7 @@ export default function AboutPage() {
             Connecting Talent with <span className="text-primary italic">Opportunity</span>
           </h1>
           <p className="max-w-2xl mx-auto text-lg leading-8 text-muted-foreground font-medium">
-            We're on a mission to completely completely redesign the global hiring process. We believe everyone deserves a career they love, and every company deserves the perfect team.
+            We&apos;re on a mission to completely completely redesign the global hiring process. We believe everyone deserves a career they love, and every company deserves the perfect team.
           </p>
           <div className="mt-10 flex justify-center gap-x-6 gap-y-4 flex-col sm:flex-row">
             <div className="bg-card px-8 py-6 rounded-3xl border border-border shadow-sm flex flex-col items-center">

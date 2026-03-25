@@ -95,7 +95,7 @@ const FAQSection = () => {
             transition={{ delay: 0.1 }}
             className="text-gray-500 dark:text-zinc-400 text-lg"
           >
-            Have questions? We have answers. If you can't find what you're looking for, feel free to contact us.
+            Have questions? We have answers. If you can&apos;t find what you&apos;re looking for, feel free to contact us.
           </motion.p>
         </div>
 
