@@ -81,7 +81,7 @@ export default function AIChatbot() {
       console.error('Chat error:', error);
       const errorMsg: Message = { 
         role: 'model', 
-        parts: "Sorry, I'm having trouble connecting to the AI service right now. Please check if the OpenAI API Key is set correctly.", 
+        parts: "Sorry, I'm having trouble connecting to the AI service right now. Please check if the Grok API Key is set correctly.", 
         timestamp: new Date() 
       };
       setHistory(prev => [...prev, errorMsg]);
@@ -150,7 +150,7 @@ export default function AIChatbot() {
                     </div>
                     <h4 className="font-black text-foreground">How can I help you today?</h4>
                     <p className="text-xs text-muted-foreground font-medium px-4">
-                      I'm your personal AI career agent powered by GPT-4. Ask me anything.
+                      I'm your personal AI career agent powered by Grok 3 Mini. Ask me anything.
                     </p>
                   </div>
 
@@ -239,7 +239,7 @@ export default function AIChatbot() {
                 </button>
               </form>
               <p className="text-[9px] text-center text-muted-foreground font-black uppercase tracking-widest mt-1">
-                Powered by OpenAI GPT-4 ✦
+                Powered by Grok 3 Mini ✦
               </p>
             </div>
           </motion.div>
