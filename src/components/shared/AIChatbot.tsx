@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, X, Send, ChevronDown } from 'lucide-react';
+import { Sparkles, Send, ChevronDown } from 'lucide-react';
 import api from '@/lib/axios';
 
 type Message = {
@@ -24,6 +24,7 @@ export default function AIChatbot() {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         setHistory(parsed.map((m: any) => ({ ...m, timestamp: new Date(m.timestamp) })));
       } catch (e) {
         console.error(e);
@@ -150,7 +151,7 @@ export default function AIChatbot() {
                     </div>
                     <h4 className="font-black text-foreground">How can I help you today?</h4>
                     <p className="text-xs text-muted-foreground font-medium px-4">
-                      I'm your personal AI career agent powered by Grok 3 Mini. Ask me anything.
+                      I&apos;m your personal AI career agent powered by Grok 3 Mini. Ask me anything.
                     </p>
                   </div>
 

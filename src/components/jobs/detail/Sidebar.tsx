@@ -4,7 +4,7 @@ import React from 'react';
 import Button from '@/components/ui/Button';
 import { IJob } from '@/types/job';
 import { DollarSign, Calendar, Users, Eye, Bookmark, Share2, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
-import { motion } from 'framer-motion';
+// import { motion } from 'framer-motion';
 
 interface SidebarProps {
   job: IJob;
