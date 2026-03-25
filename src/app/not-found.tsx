@@ -19,7 +19,7 @@ export default function NotFound() {
 
           <h1 className="text-5xl font-black text-foreground tracking-tight">Oops! Page not found</h1>
           <p className="text-lg text-muted-foreground font-medium max-w-sm mx-auto">
-            The job or page you're looking for seems to have been moved or no longer exists.
+            The job or page you&apos;re looking for seems to have been moved or no longer exists.
           </p>
 
           <div className="pt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
