@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import api from '@/lib/axios';
 import { IUser } from '@/types';
 import { useRouter } from 'next/navigation';
@@ -22,17 +22,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
-  useEffect(() => {
-    const savedToken = localStorage.getItem('token');
-    if (savedToken) {
-      setToken(savedToken);
-      fetchProfile();
-    } else {
-      setIsLoading(false);
-    }
-  }, []);
+  const logout = useCallback(() => {
+    localStorage.removeItem('token');
+    setToken(null);
+    setUser(null);
+    router.push('/login');
+  }, [router]);
 
-  const fetchProfile = async () => {
+  const fetchProfile = useCallback(async () => {
     try {
       const response = await api.get('/auth/profile');
       if (response.data.success) {
@@ -44,21 +41,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [logout]);
 
-  const login = (newToken: string) => {
+  useEffect(() => {
+    const savedToken = localStorage.getItem('token');
+    if (savedToken) {
+      setToken(savedToken);
+      fetchProfile();
+    } else {
+      setIsLoading(false);
+    }
+  }, [fetchProfile]);
+
+  const login = useCallback((newToken: string) => {
     localStorage.setItem('token', newToken);
     setToken(newToken);
     fetchProfile();
     router.push('/dashboard');
-  };
-
-  const logout = () => {
-    localStorage.removeItem('token');
-    setToken(null);
-    setUser(null);
-    router.push('/login');
-  };
+  }, [fetchProfile, router]);
 
   const isAuthenticated = !!token;
 

@@ -58,7 +58,7 @@ export default function ProtectedRoute({ children, allowedRoles }: ProtectedRout
             <div className="space-y-2">
               <h1 className="text-2xl font-extrabold tracking-tight">Access Denied</h1>
               <p className="text-muted-foreground font-medium leading-relaxed">
-                Your role <span className="text-red-500 font-bold uppercase tracking-tighter px-2 bg-red-500/10 rounded-md">{(user as any).role}</span> does not have the required permissions to view this content.
+                Your role <span className="text-red-500 font-bold uppercase tracking-tighter px-2 bg-red-500/10 rounded-md">{user.role}</span> does not have the required permissions to view this content.
               </p>
             </div>
 

@@ -7,7 +7,7 @@ import { useAuth } from '@/providers/AuthProvider';
 import { 
   Menu, X, Briefcase, Bell, ChevronDown, 
   User, Settings, LogOut, LayoutDashboard, 
-  FileText, Sparkles, PlusCircle, Building2, 
+  FileText, Building2, 
   Laptop, BarChart, PenTool, HeartPulse, 
   Hammer
 } from 'lucide-react';
