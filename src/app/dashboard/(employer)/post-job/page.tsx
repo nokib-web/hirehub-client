@@ -44,7 +44,7 @@ export default function PostJob() {
   const [isPublishing, setIsPublishing] = useState(false);
 
   const { register, handleSubmit, watch, setValue, formState: { errors }, trigger } = useForm<JobFormValues>({
-    resolver: zodResolver(jobSchema),
+    resolver: zodResolver(jobSchema) as any,
     defaultValues: {
       company: user?.company || '',
       currency: 'USD',

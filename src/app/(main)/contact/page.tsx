@@ -22,7 +22,7 @@ export default function ContactPage() {
   const [isSent, setIsSent] = useState(false);
   
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<ContactForm>({
-    resolver: zodResolver(contactSchema),
+    resolver: zodResolver(contactSchema) as any,
   });
 
   const onSubmit = async (data: ContactForm) => {

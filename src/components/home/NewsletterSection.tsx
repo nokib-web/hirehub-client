@@ -17,7 +17,7 @@ type FormData = z.infer<typeof schema>;
 
 const NewsletterSection = () => {
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormData>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema) as any,
   });
 
   const onSubmit = async (data: FormData) => {
