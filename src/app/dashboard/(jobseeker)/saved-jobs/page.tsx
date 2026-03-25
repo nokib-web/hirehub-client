@@ -31,7 +31,7 @@ export default function SavedJobs() {
         <div>
           <h1 className="text-3xl font-black text-foreground">Saved Jobs</h1>
           <p className="text-muted-foreground font-medium mt-1">
-            Jobs you've pinned to review later.
+            Jobs you&apos;ve pinned to review later.
           </p>
         </div>
 
@@ -42,7 +42,7 @@ export default function SavedJobs() {
             </div>
             <h3 className="text-2xl font-black text-foreground mb-2">No saved jobs</h3>
             <p className="text-muted-foreground max-w-sm mb-8 font-medium">
-              You haven't saved any jobs yet. When you find a job you like, click the bookmark icon to save it here.
+              You haven&apos;t saved any jobs yet. When you find a job you like, click the bookmark icon to save it here.
             </p>
             <Button onClick={() => window.location.href='/jobs'} className="h-12 px-8 rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform">
               Browse Jobs
