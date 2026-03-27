@@ -1,15 +1,15 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '@/providers/AuthProvider';
 import ProtectedRoute from '@/components/shared/ProtectedRoute';
+import { IJob } from '@/types/job';
 import JobCard from '@/components/jobs/JobCard';
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from '@/components/ui/Button';
-import { BookmarkMinus, SearchX } from 'lucide-react';
+import { BookmarkMinus } from 'lucide-react';
 
 export default function SavedJobs() {
-  const [savedJobs, setSavedJobs] = useState<any[]>([]);
+  const [savedJobs, setSavedJobs] = useState<IJob[]>([]);
 
   useEffect(() => {
     // Read from localStorage initially
@@ -62,7 +62,7 @@ export default function SavedJobs() {
                 >
                   <JobCard job={job} />
                   <button 
-                    onClick={(e) => { e.preventDefault(); handleRemove(job._id); }}
+                    onClick={(e) => { e.preventDefault(); handleRemove(job._id || ''); }}
                     className="absolute top-4 right-14 p-2 bg-rose-100 text-rose-600 rounded-lg opacity-0 group-hover:opacity-100 transition-all hover:bg-rose-200 shadow-sm z-20"
                     title="Remove from saved"
                   >

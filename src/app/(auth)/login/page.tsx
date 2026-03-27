@@ -6,8 +6,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { 
-  Eye, EyeOff, Mail, Lock, CheckCircle2, 
-  Info, Loader2, LogIn, Chrome 
+  Eye, EyeOff, Mail, Lock, 
+  Loader2, LogIn, Chrome, Info 
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { signIn } from 'next-auth/react';
@@ -56,8 +56,9 @@ export default function LoginPage() {
 
       login(result.data.accessToken);
       toast.success('Welcome back! 🎉');
-    } catch (error: any) {
-      toast.error(error.message || 'Something went wrong');
+    } catch (error) {
+      const err = error as Error;
+      toast.error(err.message || 'Something went wrong');
     } finally {
       setIsSubmitting(false);
     }
@@ -201,7 +202,7 @@ export default function LoginPage() {
           </Button>
 
           <p className="mt-8 text-center text-sm font-medium text-muted-foreground leading-none">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Link 
               href="/register" 
               className="text-primary font-bold hover:underline underline-offset-4 decoration-2"

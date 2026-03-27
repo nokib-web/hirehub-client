@@ -5,9 +5,7 @@ import ProtectedRoute from '@/components/shared/ProtectedRoute';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/axios';
 import { motion } from 'framer-motion';
-import Button from '@/components/ui/Button';
-import Badge from '@/components/ui/Badge';
-import { ExternalLink, Filter, Save } from 'lucide-react';
+import { ExternalLink, Filter } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function ManageApplications() {
@@ -27,7 +25,7 @@ export default function ManageApplications() {
 
   const filteredApps = statusFilter === 'all' 
     ? applications
-    : applications.filter((app: any) => app.status.toLowerCase() === statusFilter);
+    : applications.filter((app: { status: string; [key: string]: unknown }) => app.status.toLowerCase() === statusFilter);
 
   const adminUpdateStatus = async (appId: string, newStatus: string) => {
     try {
@@ -90,7 +88,7 @@ export default function ManageApplications() {
                  ) : filteredApps.length === 0 ? (
                     <tr><td colSpan={4} className="p-10 text-center text-muted-foreground font-medium">No applications found.</td></tr>
                  ) : (
-                   filteredApps.map((app: any) => (
+                   filteredApps.map((app: { _id: string; status: string; applicant?: { name?: string; email?: string }; job?: { _id?: string; title?: string; company?: string }; createdAt: string; [key: string]: unknown }) => (
                      <motion.tr key={app._id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="hover:bg-muted/20 transition-all group">
                        <td className="px-6 py-4">
                          <p className="font-bold text-base text-foreground truncate max-w-[200px]">

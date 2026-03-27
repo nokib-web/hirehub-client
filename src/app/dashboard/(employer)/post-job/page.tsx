@@ -9,7 +9,7 @@ import ProtectedRoute from '@/components/shared/ProtectedRoute';
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
-import { Sparkles, Building2, MapPin, DollarSign, Briefcase, ChevronRight, ChevronLeft, CheckCircle2 } from 'lucide-react';
+import { Sparkles, MapPin, Briefcase, ChevronRight, ChevronLeft, CheckCircle2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '@/lib/axios';
 import { useRouter } from 'next/navigation';
@@ -93,7 +93,7 @@ export default function PostJob() {
          setValue('skills', res.data.data.skills || []);
          toast.success('Generated successfully! ✨');
       }
-    } catch (err) {
+    } catch {
       toast.error('AI Generation failed');
     } finally {
       setIsAiLoading(false);
@@ -128,7 +128,7 @@ export default function PostJob() {
             placeholder={`Add ${label.toLowerCase()}...`}
           />
         </div>
-        {errors[name] && <p className="text-xs text-rose-500 font-bold">{(errors[name] as any)?.message}</p>}
+        {errors[name] && <p className="text-xs text-rose-500 font-bold">{(errors[name] as { message?: string })?.message}</p>}
       </div>
     );
   };
@@ -149,8 +149,9 @@ export default function PostJob() {
       await api.post('/jobs', payload);
       toast.success(status === 'active' ? 'Job Published!' : 'Draft Saved!');
       router.push('/dashboard/my-jobs');
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Failed to post job');
+    } catch (err) {
+      const error = err as { response?: { data?: { message?: string } } };
+      toast.error(error.response?.data?.message || 'Failed to post job');
     } finally {
       setIsPublishing(false);
     }

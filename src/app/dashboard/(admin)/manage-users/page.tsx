@@ -2,13 +2,13 @@
 
 import React, { useState } from 'react';
 import ProtectedRoute from '@/components/shared/ProtectedRoute';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/axios';
-import { Search, ShieldAlert, CheckCircle2, UserCog, User, Briefcase } from 'lucide-react';
-import Button from '@/components/ui/Button';
+import { Search, ShieldAlert, CheckCircle2, User, Briefcase } from 'lucide-react';
+
 import Badge from '@/components/ui/Badge';
 import toast from 'react-hot-toast';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { IUser } from '@/types';
 
 export default function ManageUsers() {
@@ -16,7 +16,7 @@ export default function ManageUsers() {
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('All');
 
-  const { data, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: ['admin-users'],
     queryFn: async () => {
       const res = await api.get('/users/all'); // Assuming backend route added by user or existing

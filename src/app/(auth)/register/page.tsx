@@ -8,7 +8,7 @@ import * as z from 'zod';
 import { 
   User, Mail, Lock, CheckCircle2, 
   Loader2, UserPlus, Chrome, Building2, 
-  ChevronRight, LayoutGrid, Check, Info
+  LayoutGrid
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { signIn } from 'next-auth/react';
@@ -98,8 +98,9 @@ export default function RegisterPage() {
 
       login(result.data.accessToken);
       toast.success('Account created successfully! 🚀');
-    } catch (error: any) {
-      toast.error(error.message || 'Something went wrong');
+    } catch (error) {
+      const err = error as Error;
+      toast.error(err.message || 'Something went wrong');
     } finally {
       setIsSubmitting(false);
     }

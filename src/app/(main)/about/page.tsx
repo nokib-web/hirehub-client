@@ -1,6 +1,6 @@
 import React from 'react';
 import { Target, Users, Zap, Shield, Trophy, LayoutGrid, Heart, Coffee } from 'lucide-react';
-import Image from 'next/image';
+
 
 export default function AboutPage() {
   const values = [
@@ -80,7 +80,7 @@ export default function AboutPage() {
          <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="text-center max-w-2xl mx-auto mb-16">
                <h2 className="text-3xl font-black text-foreground">Our Core Values</h2>
-               <p className="mt-4 text-muted-foreground font-medium">The principles that guide our team's daily decisions and long-term vision.</p>
+               <p className="mt-4 text-muted-foreground font-medium">The principles that guide our team&apos;s daily decisions and long-term vision.</p>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
                {values.map((v, i) => (
@@ -120,7 +120,7 @@ export default function AboutPage() {
          <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="text-center max-w-2xl mx-auto mb-16">
                <h2 className="text-3xl font-black text-white">Why Choose HireHub</h2>
-               <p className="mt-4 text-primary-foreground/80 font-medium">Let's compare us to the traditional job boards.</p>
+               <p className="mt-4 text-primary-foreground/80 font-medium">Let&apos;s compare us to the traditional job boards.</p>
             </div>
             <div className="grid sm:grid-cols-3 gap-8 text-center text-white">
                {benefits.map((b, i) => (

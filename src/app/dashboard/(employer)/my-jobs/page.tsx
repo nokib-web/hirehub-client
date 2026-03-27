@@ -8,13 +8,13 @@ import api from '@/lib/axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
-import { Briefcase, Building2, MapPin, DollarSign, PenSquare, Eye, XCircle, Search, Edit2, Trash2 } from 'lucide-react';
+import { Eye, Search, Edit2, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { IJob } from '@/types';
 
 export default function MyJobs() {
-  const { user } = useAuth();
+  const {  } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   
   const { data, isLoading, refetch } = useQuery({
@@ -26,7 +26,7 @@ export default function MyJobs() {
     }
   });
 
-  const jobs = (Array.isArray(data) ? data : (data as any)?.jobs || []) as IJob[];
+  const jobs = (Array.isArray(data) ? data : (data as unknown as { jobs?: IJob[] })?.jobs || []) as IJob[];
   
   const filteredJobs = jobs.filter((job: IJob) => 
     job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -39,7 +39,7 @@ export default function MyJobs() {
         await api.delete(`/jobs/${id}`);
         toast.success('Job deleted successfully');
         refetch();
-      } catch (err) {
+      } catch {
         toast.error('Failed to delete job');
       }
     }
@@ -51,7 +51,7 @@ export default function MyJobs() {
       await api.patch(`/jobs/${id}`, { status: newStatus });
       toast.success(`Job marked as ${newStatus}`);
       refetch();
-    } catch (err) {
+    } catch {
       toast.error('Failed to update status');
     }
   };

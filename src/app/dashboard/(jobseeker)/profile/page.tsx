@@ -6,7 +6,7 @@ import ProtectedRoute from '@/components/shared/ProtectedRoute';
 import { motion } from 'framer-motion';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
-import { Camera, MapPin, Briefcase, Plus, X } from 'lucide-react';
+import { Camera, MapPin, Briefcase, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '@/lib/axios';
 

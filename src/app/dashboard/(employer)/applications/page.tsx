@@ -1,14 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useAuth } from '@/providers/AuthProvider';
 import ProtectedRoute from '@/components/shared/ProtectedRoute';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import Button from '@/components/ui/Button';
-import Badge from '@/components/ui/Badge';
-import { FileText, MapPin, DollarSign, Mail, Globe, Calendar, Briefcase, ChevronDown } from 'lucide-react';
+import { FileText, DollarSign, Mail, Globe, Calendar, ChevronDown } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function EmployerApplications() {
@@ -39,7 +36,7 @@ export default function EmployerApplications() {
 
   const filteredApps = selectedJobId === 'all' 
     ? appsList
-    : appsList.filter((app: any) => app.job?._id === selectedJobId);
+    : appsList.filter((app: { job?: { _id: string }; [key: string]: unknown }) => app.job?._id === selectedJobId);
 
   const updateStatus = async (appId: string, newStatus: string) => {
     try {
@@ -81,7 +78,7 @@ export default function EmployerApplications() {
                className="w-full h-12 rounded-xl border border-input bg-card px-4 shadow-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary font-medium"
              >
                <option value="all">All Jobs ({appsList.length})</option>
-               {jobsList.map((job: any) => (
+               {jobsList.map((job: { _id: string; title?: string; [key: string]: unknown }) => (
                  <option key={job._id} value={job._id}>
                    {job.title}
                  </option>
@@ -100,7 +97,7 @@ export default function EmployerApplications() {
             </div>
           ) : (
             <AnimatePresence>
-              {filteredApps.map((app: any, idx: number) => {
+              {filteredApps.map((app: { _id: string; applicant?: { name?: string; email?: string }; job?: { title?: string }; createdAt: string; expectedSalary?: string; portfolioUrl?: string; resumeUrl?: string; status: string; coverLetter?: string; [key: string]: unknown }) => {
                 const applicant = app.applicant || {};
                 const job = app.job || {};
                 const isExpanded = expandedId === app._id;

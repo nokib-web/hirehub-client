@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Building2, ExternalLink } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
 
@@ -36,7 +35,7 @@ const TopCompanies = () => {
               transition={{ delay: 0.1 }}
               className="text-gray-500 dark:text-zinc-400 text-lg"
             >
-              Join the world's most innovative companies and grow your career.
+              Join the world&apos;s most innovative companies and grow your career.
             </motion.p>
           </div>
           <Button variant="outline" className="border-zinc-200 dark:border-zinc-800 hover:border-blue-500 text-blue-600 dark:text-blue-400">

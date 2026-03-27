@@ -2,13 +2,13 @@
 
 import React, { useState } from 'react';
 import ProtectedRoute from '@/components/shared/ProtectedRoute';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/axios';
-import { Search, Edit2, Trash2, Eye, Star } from 'lucide-react';
+import { Search, Trash2, Eye, Star } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
 import toast from 'react-hot-toast';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 
 export default function ManageJobs() {
@@ -27,7 +27,7 @@ export default function ManageJobs() {
 
   const jobs = Array.isArray(data) ? data : data?.jobs || [];
 
-  const filteredJobs = jobs.filter((job: any) => {
+  const filteredJobs = jobs.filter((job: { title?: string; company?: string; category?: string; status?: string; [key: string]: unknown }) => {
     const matchesSearch = job.title?.toLowerCase().includes(searchTerm.toLowerCase()) || job.company?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = categoryFilter === 'All' || job.category === categoryFilter;
     const matchesStatus = statusFilter === 'All' || job.status === statusFilter.toLowerCase();
@@ -104,7 +104,7 @@ export default function ManageJobs() {
                  ) : filteredJobs.length === 0 ? (
                     <tr><td colSpan={5} className="p-10 text-center text-muted-foreground font-medium">No jobs mathing your filters.</td></tr>
                  ) : (
-                   filteredJobs.map((job: any) => (
+                   filteredJobs.map((job: { _id: string; title: string; company?: string; category?: string; type?: string; status?: string; isFeatured: boolean; [key: string]: unknown }) => (
                      <motion.tr key={job._id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="hover:bg-muted/30 transition-all group">
                        <td className="px-6 py-4">
                          <Link href={`/jobs/${job._id}`} className="font-bold text-foreground hover:text-primary transition-colors block text-base truncate max-w-[200px]">

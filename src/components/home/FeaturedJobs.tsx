@@ -8,9 +8,10 @@ import JobCard from './JobCard';
 import Skeleton from '@/components/ui/Skeleton';
 import Button from '@/components/ui/Button';
 import { Briefcase } from 'lucide-react';
+import { IJob } from '@/types/job';
 
 const FeaturedJobs = () => {
-  const { data: jobs, isLoading, error } = useQuery({
+  const { data: jobs, isLoading } = useQuery({
     queryKey: ['featured-jobs'],
     queryFn: async () => {
       try {
@@ -76,17 +77,20 @@ const FeaturedJobs = () => {
               </div>
             ))
           ) : (
-            displayJobs.map((job: any, index: number) => (
+            displayJobs.map((job: unknown, index: number) => {
+              const j = job as IJob;
+              return (
               <motion.div 
-                key={job._id || index}
+                key={j._id || index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
               >
-                <JobCard job={job} />
+                <JobCard job={j} />
               </motion.div>
-            ))
+            );
+          })
           )}
         </div>
 
@@ -101,7 +105,7 @@ const FeaturedJobs = () => {
 };
 
 // Real relevant mock data for demonstration
-const mockJobs: any[] = [
+const mockJobs = [
   {
     _id: "1",
     company: "Google",
@@ -190,6 +194,6 @@ const mockJobs: any[] = [
     createdAt: new Date(Date.now() - 604800000).toISOString(),
     isFeatured: true
   }
-];
+] as unknown as IJob[];
 
 export default FeaturedJobs;

@@ -3,7 +3,6 @@
 import React, { useState, ChangeEvent, KeyboardEvent } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Search, ChevronDown, ChevronUp } from 'lucide-react';
-import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 
 const CATEGORIES = [

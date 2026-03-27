@@ -72,7 +72,7 @@ export default function AdminOverview() {
     }
   });
 
-  const StatCard = ({ title, value, icon, color, trend, idx }: any) => (
+  const StatCard = ({ title, value, icon, color, trend, idx }: { title: string; value: string | number; icon: React.ReactNode; color: string; trend: number; idx: number }) => (
     <motion.div 
       initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.1 }}
       className={`bg-card rounded-3xl p-6 border border-border shadow-sm relative overflow-hidden group`}
@@ -160,7 +160,7 @@ export default function AdminOverview() {
                         dataKey="value"
                         stroke="none"
                       >
-                        {chartData?.appStatus.map((entry: any, index: number) => (
+                        {chartData?.appStatus.map((entry: { color: string; [key: string]: unknown }, index: number) => (
                           <Cell key={`cell-${index}`} fill={entry.color} />
                         ))}
                       </Pie>

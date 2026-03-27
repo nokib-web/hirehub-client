@@ -62,7 +62,7 @@ export default function ApplicationModal({ isOpen, onClose, jobTitle, companyNam
         onClose();
         setIsSuccess(false);
       }, 3000);
-    } catch (error) {
+    } catch {
       toast.error('Submission failed');
     } finally {
       setIsSubmitting(false);
@@ -86,7 +86,7 @@ export default function ApplicationModal({ isOpen, onClose, jobTitle, companyNam
                 </div>
                 <h2 className="text-3xl font-bold mb-2">Application Submitted! 🎉</h2>
                 <p className="text-muted-foreground max-w-sm mb-8 text-lg">
-                  Good luck with your application at {companyName}. We've notified the hiring manager.
+                  Good luck with your application at {companyName}. We&apos;ve notified the hiring manager.
                 </p>
                 <Button onClick={onClose} variant="outline" className="px-8 mt-4">Close Window</Button>
               </div>

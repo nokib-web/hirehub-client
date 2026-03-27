@@ -9,7 +9,8 @@ const handler = NextAuth({
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile }) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async signIn({ user, account }) {
       if (account?.provider === "google") {
         try {
           // You would typically sync this with your backend here
@@ -26,7 +27,7 @@ const handler = NextAuth({
       }
       return true;
     },
-    async jwt({ token, user, account }) {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
         token.email = user.email;
@@ -37,10 +38,10 @@ const handler = NextAuth({
     },
     async session({ session, token }) {
       if (session.user) {
-        (session.user as any).id = token.id;
-        (session.user as any).name = token.name;
-        (session.user as any).email = token.email;
-        (session.user as any).image = token.image;
+        (session.user as {id?: string; name?: string | null; email?: string | null; image?: string | null}).id = token.id as string;
+        (session.user as {id?: string; name?: string | null; email?: string | null; image?: string | null}).name = token.name;
+        (session.user as {id?: string; name?: string | null; email?: string | null; image?: string | null}).email = token.email;
+        (session.user as {id?: string; name?: string | null; email?: string | null; image?: string | null}).image = token.image as string;
       }
       return session;
     },

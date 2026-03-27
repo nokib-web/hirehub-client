@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useAuth } from '@/providers/AuthProvider';
+
 import ProtectedRoute from '@/components/shared/ProtectedRoute';
 import { useQuery } from '@tanstack/react-query';
 import api from '@/lib/axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
-import { Briefcase, Building2, MapPin, DollarSign, ExternalLink, XCircle, SearchX } from 'lucide-react';
+import { Building2, MapPin, DollarSign, ExternalLink, XCircle, SearchX } from 'lucide-react';
 import { IApplication, IJob } from '@/types';
 import Link from 'next/link';
 
@@ -43,7 +43,7 @@ export default function MyApplications() {
     }
   };
 
-  const applications = (Array.isArray(data) ? data : (data as any)?.applications || []) as IApplication[];
+  const applications = (Array.isArray(data) ? data : (data as unknown as { applications?: IApplication[] })?.applications || []) as IApplication[];
   const filteredApps = activeTab === 'all' 
     ? applications 
     : applications.filter((app: IApplication) => app.status.toLowerCase() === activeTab);
@@ -91,7 +91,7 @@ export default function MyApplications() {
               </div>
               <h3 className="text-xl font-black text-foreground">No applications found</h3>
               <p className="text-muted-foreground mt-2 max-w-sm">
-                You haven't submitted any applications that match the "{tabs.find(t => t.toLowerCase() === activeTab)}" status.
+                You haven&apos;t submitted any applications that match the &quot;{tabs.find(t => t.toLowerCase() === activeTab)}&quot; status.
               </p>
               {activeTab !== 'all' && (
                 <Button onClick={() => setActiveTab('all')} variant="outline" className="mt-6 rounded-xl font-bold">
