@@ -32,7 +32,7 @@ export default function ApplicationModal({ isOpen, onClose, jobTitle, companyNam
 
     setIsImproving(true);
     try {
-      const response = await axios.post('http://localhost:5000/api/ai/improve-cover-letter', {
+      const response = await axios.post('https://hirehub-server-ydm5.onrender.com/api/ai/improve-cover-letter', {
         coverLetter,
         jobTitle,
       });

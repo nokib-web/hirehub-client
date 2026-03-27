@@ -23,7 +23,7 @@ export default function JobTabs({ job }: JobTabsProps) {
   const generateAISummary = async () => {
     setIsSummarizing(true);
     try {
-      const response = await axios.post('http://localhost:5000/api/ai/review-summary', {
+      const response = await axios.post('https://hirehub-server-ydm5.onrender.com/api/ai/review-summary', {
         companyId: job.company, // Assuming company name used as proxy or id
       });
       setAiReviewSummary(response.data.data);

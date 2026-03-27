@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useSearchParams } from 'next/navigation';
 import { IJob } from '@/types/job';
 
-const API_BASE_URL = 'http://localhost:5000/api'; // Assuming server runs on 5000
+const API_BASE_URL = 'https://hirehub-server-ydm5.onrender.com/api'; // Targeting deployed server
 
 export const useJobs = () => {
   const searchParams = useSearchParams();
