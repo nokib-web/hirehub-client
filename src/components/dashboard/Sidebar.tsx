@@ -28,19 +28,19 @@ const Sidebar = () => {
 
   const roleConfigs = {
     jobseeker: [
-      { name: 'Overview', href: '/dashboard', icon: LayoutDashboard },
+      { name: 'Overview', href: '/dashboard/overview', icon: LayoutDashboard },
       { name: 'My Applications', href: '/dashboard/my-applications', icon: FileText },
       { name: 'Saved Jobs', href: '/dashboard/saved-jobs', icon: Bookmark },
       { name: 'Profile', href: '/dashboard/profile', icon: User },
     ],
     employer: [
-      { name: 'Overview', href: '/dashboard', icon: LayoutDashboard },
+      { name: 'Overview', href: '/dashboard/overview', icon: LayoutDashboard },
       { name: 'Post a Job', href: '/dashboard/post-job', icon: PlusSquare },
       { name: 'My Jobs', href: '/dashboard/my-jobs', icon: Briefcase },
       { name: 'Applications', href: '/dashboard/applications', icon: Users },
     ],
     admin: [
-      { name: 'Console', href: '/dashboard/overview', icon: LayoutDashboard },
+      { name: 'Overview', href: '/dashboard/overview', icon: LayoutDashboard },
       { name: 'Citizens', href: '/dashboard/manage-users', icon: Users },
       { name: 'Listings', href: '/dashboard/manage-jobs', icon: Briefcase },
       { name: 'Pipeline', href: '/dashboard/manage-applications', icon: FileText },

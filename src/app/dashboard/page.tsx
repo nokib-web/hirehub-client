@@ -12,13 +12,7 @@ export default function DashboardRedirect() {
 
   useEffect(() => {
     if (!isLoading && user) {
-      if (user.role === 'jobseeker') {
-        router.push('/dashboard/profile');
-      } else if (user.role === 'employer') {
-        router.push('/dashboard/my-jobs');
-      } else if (user.role === 'admin') {
-        router.push('/dashboard/overview');
-      }
+      router.push('/dashboard/overview');
     }
   }, [user, isLoading, router]);
 

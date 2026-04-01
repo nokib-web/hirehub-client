@@ -206,7 +206,11 @@ export default function JobsPage() {
               </div>
             ) : jobs.length > 0 ? (
               jobs.map((job) => (
-                <JobCard key={job._id} job={job} />
+                <JobCard 
+                  key={job._id} 
+                  job={job} 
+                  variant={viewMode === 'list' ? 'minimal' : 'default'}
+                />
               ))
             ) : (
               <div className="flex flex-col items-center justify-center py-20 text-center bg-card rounded-2xl border border-dashed border-border/60 mt-4">

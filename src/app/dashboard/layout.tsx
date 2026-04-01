@@ -28,14 +28,14 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
   const navLinks = {
     jobseeker: [
-      { name: 'Overview', href: '/dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
+      { name: 'Overview', href: '/dashboard/overview', icon: <LayoutDashboard className="w-5 h-5" /> },
       { name: 'My Profile', href: '/dashboard/profile', icon: <User className="w-5 h-5" /> },
       { name: 'My Applications', href: '/dashboard/my-applications', icon: <FileText className="w-5 h-5" /> },
       { name: 'Saved Jobs', href: '/dashboard/saved-jobs', icon: <Bookmark className="w-5 h-5" /> },
       { name: 'AI Career Path', href: '/dashboard/ai-assistant', icon: <Sparkles className="w-5 h-5" /> },
     ],
     employer: [
-      { name: 'Overview', href: '/dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
+      { name: 'Overview', href: '/dashboard/overview', icon: <LayoutDashboard className="w-5 h-5" /> },
       { name: 'Post a Job', href: '/dashboard/post-job', icon: <PlusCircle className="w-5 h-5" /> },
       { name: 'My Jobs', href: '/dashboard/my-jobs', icon: <Briefcase className="w-5 h-5" /> },
       { name: 'Applications', href: '/dashboard/applications', icon: <Users className="w-5 h-5" /> },

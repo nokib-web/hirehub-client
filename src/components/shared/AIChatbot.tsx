@@ -79,40 +79,41 @@ export default function AIChatbot() {
 
   return (
     <>
-      {/* CHAT PANEL */}
       {isOpen && (
-        <div className="fixed z-[9999] top-24 right-4 
-                        w-[calc(100vw-32px)] sm:w-[380px] 
-                        h-[500px] max-h-[calc(100vh-140px)]
+        <div className="fixed z-[9999] bottom-24 right-6 
+                        w-[calc(100vw-48px)] sm:w-[420px] 
+                        h-[600px] max-h-[calc(100vh-160px)]
                         flex flex-col
-                        bg-white dark:bg-gray-900 
-                        rounded-2xl 
-                        shadow-[0_25px_50px_rgba(0,0,0,0.25)]
-                        border border-gray-200 dark:border-gray-700
-                        overflow-hidden chat-panel-safe">
+                        bg-card/95 backdrop-blur-2xl
+                        rounded-[2.5rem] 
+                        shadow-[0_40px_100px_-20px_rgba(0,0,0,0.3)]
+                        border border-primary/20
+                        overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-500">
 
-          {/* Header */}
+          {/* Header - More Premium */}
           <div className="flex-shrink-0 flex items-center justify-between 
-                          px-4 py-3 bg-blue-600 text-white rounded-t-2xl">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-white/20 rounded-full 
-                              flex items-center justify-center">
-                <Sparkles size={16} />
+                          px-8 py-5 bg-gradient-to-r from-primary to-blue-600 text-white relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-xl" />
+            
+            <div className="flex items-center gap-4 relative z-10">
+              <div className="w-11 h-11 bg-white/20 backdrop-blur-md rounded-2xl 
+                              flex items-center justify-center border border-white/30 shadow-lg">
+                <Sparkles size={20} className="text-white animate-pulse" />
               </div>
-              <div>
-                <p className="font-semibold text-sm">HireHub AI</p>
-                <p className="text-xs text-blue-200">Powered by Grok</p>
+              <div className="flex flex-col">
+                <p className="font-black text-xs uppercase tracking-[0.2em] opacity-80">System</p>
+                <p className="font-black text-lg tracking-tight italic uppercase">HireHub AI</p>
               </div>
             </div>
             <button 
               onClick={() => setIsOpen(false)}
-              className="hover:bg-white/20 rounded-full p-1 transition-colors">
-              <X size={18} />
+              className="bg-white/10 hover:bg-white/30 rounded-xl p-2 transition-all hover:rotate-90 active:scale-90 border border-white/20">
+              <X size={20} />
             </button>
           </div>
 
           {/* Messages area — ONLY this scrolls */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
+          <div className="flex-1 overflow-y-auto p-8 space-y-8 custom-scrollbar">
             
             {/* Welcome state */}
             {messages.length === 0 && (
@@ -141,15 +142,22 @@ export default function AIChatbot() {
 
             {/* Messages */}
             {messages.map((msg, i) => (
-              <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[80%] rounded-2xl px-3 py-2 text-sm
+              <div key={i} className={`flex items-start gap-4 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                <div className={`w-8 h-8 rounded-xl shrink-0 flex items-center justify-center border-2 ${
+                  msg.role === 'assistant' 
+                    ? 'bg-primary border-primary/20 text-white' 
+                    : 'bg-muted border-border text-foreground text-[10px] font-black uppercase'
+                }`}>
+                  {msg.role === 'assistant' ? <Sparkles size={14} /> : 'ME'}
+                </div>
+                <div className={`max-w-[80%] rounded-[1.5rem] px-5 py-4 text-sm font-medium leading-relaxed shadow-lg border
                   ${msg.role === 'user' 
-                    ? 'bg-blue-600 text-white rounded-br-sm' 
-                    : 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-bl-sm'
+                    ? 'bg-primary text-white border-transparent' 
+                    : 'bg-muted/40 text-foreground border-border/60'
                   }`}>
-                  <p className="whitespace-pre-wrap leading-relaxed">{msg.content}</p>
-                  <p className={`text-[10px] mt-1 
-                    ${msg.role === 'user' ? 'text-blue-200' : 'text-gray-400'}`}>
+                  <p className="whitespace-pre-wrap">{msg.content}</p>
+                  <p className={`text-[9px] mt-2 font-black uppercase tracking-widest opacity-60
+                    ${msg.role === 'user' ? 'text-white' : 'text-muted-foreground'}`}>
                     {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </p>
                 </div>
@@ -158,57 +166,52 @@ export default function AIChatbot() {
 
             {/* Typing indicator */}
             {isLoading && (
-              <div className="flex justify-start">
-                <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl rounded-bl-sm px-4 py-3">
-                  <div className="flex gap-1 items-center">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:0ms]"/>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:150ms]"/>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:300ms]"/>
-                  </div>
-                </div>
+              <div className="flex justify-start items-center gap-3">
+                 <div className="p-3 bg-muted/40 rounded-2xl border border-border/60">
+                    <div className="flex gap-1.5 items-center">
+                      <div className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce [animation-delay:0ms]"/>
+                      <div className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce [animation-delay:150ms]"/>
+                      <div className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce [animation-delay:300ms]"/>
+                    </div>
+                 </div>
+                 <p className="text-[9px] font-black uppercase tracking-widest text-primary animate-pulse">Computing...</p>
               </div>
             )}
 
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input area — never scrolls */}
-          <div className="flex-shrink-0 p-3 border-t 
-                          border-gray-200 dark:border-gray-700 
-                          bg-white dark:bg-gray-900">
-            <div className="flex gap-2 items-end">
+          {/* Input area */}
+          <div className="flex-shrink-0 p-8 border-t border-border/40 bg-card/80 backdrop-blur-md">
+            <div className="flex gap-3 items-end">
               <textarea
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Ask about jobs, resume, interviews..."
+                placeholder="Talk to HireHub Assistant..."
                 rows={1}
-                className="flex-1 resize-none text-sm px-3 py-2 
-                           rounded-xl border border-gray-200 
-                           dark:border-gray-600
-                           bg-gray-50 dark:bg-gray-800
-                           text-gray-900 dark:text-gray-100
-                           placeholder-gray-400
-                           focus:outline-none focus:ring-2 
-                           focus:ring-blue-500 focus:border-transparent
-                           max-h-24 overflow-y-auto"/>
+                className="flex-1 resize-none text-sm px-5 py-3.5 
+                           rounded-2xl border-2 border-border/60
+                           bg-muted/30
+                           text-foreground
+                           placeholder-muted-foreground/50
+                           focus:outline-none focus:ring-4 
+                           focus:ring-primary/5 focus:border-primary
+                           max-h-32 overflow-y-auto transition-all"/>
               <button
                 onClick={() => sendMessage(input)}
                 disabled={!input.trim() || isLoading}
-                className="flex-shrink-0 w-9 h-9 bg-blue-600 
-                           hover:bg-blue-700 disabled:bg-gray-300 
+                className="flex-shrink-0 w-12 h-12 bg-primary 
+                           hover:bg-primary/90 disabled:bg-muted 
                            disabled:cursor-not-allowed
-                           text-white rounded-xl 
+                           text-white rounded-2xl 
                            flex items-center justify-center
-                           transition-colors">
+                           transition-all hover:scale-105 active:scale-95 shadow-xl shadow-primary/20">
                 {isLoading 
-                  ? <Loader2 size={16} className="animate-spin"/> 
-                  : <Send size={16}/>}
+                  ? <Loader2 size={20} className="animate-spin"/> 
+                  : <Send size={20}/>}
               </button>
             </div>
-            <p className="text-[10px] text-gray-400 text-center mt-2">
-              Powered by Grok 3 Mini · Press Enter to send
-            </p>
           </div>
         </div>
       )}

@@ -67,10 +67,12 @@ export default function JobDetailPage() {
 
           {/* Sticky Sidebar (Right) */}
           <div className="lg:w-[380px] shrink-0">
-            <Sidebar 
-              job={job} 
-              onApply={() => setIsApplyModalOpen(true)} 
-            />
+            <div className="sticky top-32">
+              <Sidebar 
+                job={job} 
+                onApply={() => setIsApplyModalOpen(true)} 
+              />
+            </div>
           </div>
         </div>
       </div>

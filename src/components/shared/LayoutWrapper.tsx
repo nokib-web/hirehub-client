@@ -14,14 +14,14 @@ const LayoutWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   const isDashboardRoute = pathname?.startsWith('/dashboard');
 
   return (
-    <>
+    <div className="relative isolate">
       {!isDashboardRoute && <Navbar />}
       <main className={cn(!isDashboardRoute ? "pt-24" : "min-h-screen", "relative z-0")}>
         {children}
       </main>
       {!isDashboardRoute && <Footer />}
-      {!isDashboardRoute && <AIChatbot />}
-    </>
+      <AIChatbot />
+    </div>
   );
 };
 
