@@ -260,7 +260,7 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
         </header>
 
         {/* Dashboard Main Content */}
-        <main className="flex-1 p-4 md:p-8">
+        <main className="flex-1 p-3 sm:p-4 md:p-6 lg:p-8">
            <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

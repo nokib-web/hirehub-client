@@ -87,15 +87,15 @@ export default function ManageUsers() {
         retry={refetch}
         loadingMessage="Accessing user directory database..."
       >
-        <div className="max-w-7xl mx-auto space-y-12 pb-20">
+        <div className="max-w-7xl mx-auto space-y-8 md:space-y-12 pb-12 md:pb-20">
           {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8">
              <div className="space-y-3">
                 <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-black uppercase tracking-wider border border-primary/20">
                   <ShieldAlert className="w-3 h-3" /> User Authorization System
                 </div>
-                <h1 className="text-5xl font-black text-foreground tracking-tight leading-none italic uppercase">Platform Inhabitants</h1>
-                <p className="text-muted-foreground font-medium max-w-lg">Advanced identity management. Control access levels, moderate behavior, and oversee platform participants.</p>
+                <h1 className="text-3xl md:text-5xl font-black text-foreground tracking-tight leading-none italic uppercase">Platform Inhabitants</h1>
+                <p className="text-muted-foreground font-medium max-w-lg text-sm">Advanced identity management. Control access levels, moderate behavior, and oversee platform participants.</p>
              </div>
           </div>
 
@@ -124,8 +124,8 @@ export default function ManageUsers() {
           </div>
 
           {/* Table */}
-          <div className="bg-card border border-border shadow-2xl shadow-primary/5 rounded-[3rem] overflow-hidden">
-             <div className="overflow-x-auto text-center">
+          <div className="bg-card border border-border shadow-2xl shadow-primary/5 rounded-[2rem] md:rounded-[3rem] overflow-hidden">
+             <div className="overflow-x-auto">
                <table className="w-full text-left">
                  <thead>
                    <tr className="bg-muted/30 border-b border-border/50">
@@ -194,7 +194,7 @@ export default function ManageUsers() {
                              <div className="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-4 group-hover:translate-x-0">
                                 <select 
                                   value={user.role}
-                                  onChange={(e) => updateMutation.mutate({ id: (user._id || user.id) as string, updates: { role: e.target.value } })}
+                                  onChange={(e) => updateMutation.mutate({ id: (user._id || user.id) as string, updates: { role: e.target.value as 'jobseeker' | 'employer' | 'admin' } })}
                                   className="h-12 text-[10px] font-black uppercase tracking-[0.2em] border-2 border-border/60 bg-card rounded-xl px-4 outline-none cursor-pointer hover:border-primary transition-all appearance-none text-center"
                                 >
                                    <option value="jobseeker">Jobseeker</option>

@@ -9,6 +9,7 @@ import { FileText, DollarSign, Mail, Globe, Calendar, ChevronDown, Users, Search
 import toast from 'react-hot-toast';
 import DataWrapper from '@/components/dashboard/DataWrapper';
 import Badge from '@/components/ui/Badge';
+import Button from '@/components/ui/Button';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { IApplication, IJob, IUser } from '@/types';
 
@@ -112,16 +113,16 @@ export default function EmployerApplications() {
       >
         <div className="space-y-12 max-w-7xl mx-auto pb-20">
           {/* Header Section */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
             <div className="space-y-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-black uppercase tracking-wider border border-primary/20">
                 <Users className="w-3 h-3" /> Recruitment Funnel
               </div>
-              <h1 className="text-4xl font-black text-foreground tracking-tight leading-tight italic uppercase">Candidate Pipeline</h1>
-              <p className="text-muted-foreground font-medium max-w-md">Streamline your hiring process. Review, shortlist, and hire top-tier talent from around the world.</p>
+              <h1 className="text-3xl md:text-4xl font-black text-foreground tracking-tight leading-tight italic uppercase">Candidate Pipeline</h1>
+              <p className="text-muted-foreground font-medium max-w-md text-sm">Streamline your hiring process. Review, shortlist, and hire top-tier talent from around the world.</p>
             </div>
             
-            <div className="w-full md:w-80 relative group">
+            <div className="w-full lg:w-80 relative group">
                <div className="absolute -top-3 left-4 bg-background px-2 text-[10px] font-black text-primary uppercase tracking-widest z-10 border border-primary/20 rounded-md">
                  Filter Positions
                </div>
@@ -130,7 +131,7 @@ export default function EmployerApplications() {
                  <select 
                    value={selectedJobId} 
                    onChange={e => handleJobFilterChange(e.target.value)}
-                   className="w-full h-16 pl-12 pr-10 rounded-[1.25rem] border-2 border-border/60 bg-card shadow-xl shadow-primary/5 outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary font-bold text-sm appearance-none cursor-pointer transition-all"
+                   className="w-full h-14 md:h-16 pl-12 pr-10 rounded-[1.25rem] border-2 border-border/60 bg-card shadow-xl shadow-primary/5 outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary font-bold text-sm appearance-none cursor-pointer transition-all"
                  >
                    <option value="all">All Active Positions ({appsList.length})</option>
                    {jobsList.map((job: IJob) => (
@@ -177,13 +178,13 @@ export default function EmployerApplications() {
                     const appId = (app._id || app.id) as string;
 
                     return (
-                      <motion.div 
-                        initial={{ opacity: 0, x: -20 }} 
-                        animate={{ opacity: 1, x: 0 }} 
-                        transition={{ duration: 0.5, delay: idx * 0.05 }}
-                        key={appId}
-                        className="bg-card border border-border rounded-[3rem] p-8 md:p-12 shadow-[0_12px_48px_-12px_rgba(0,0,0,0.05)] hover:shadow-[0_24px_64px_-12px_rgba(0,0,0,0.1)] hover:border-primary/20 transition-all duration-500 relative flex flex-col lg:flex-row gap-12 group"
-                      >
+                        <motion.div 
+                          initial={{ opacity: 0, x: -20 }} 
+                          animate={{ opacity: 1, x: 0 }} 
+                          transition={{ duration: 0.5, delay: idx * 0.05 }}
+                          key={appId}
+                          className="bg-card border border-border rounded-[2rem] md:rounded-[3rem] p-6 md:p-12 shadow-[0_12px_48px_-12px_rgba(0,0,0,0.05)] hover:shadow-[0_24px_64px_-12px_rgba(0,0,0,0.1)] hover:border-primary/20 transition-all duration-500 relative flex flex-col lg:flex-row gap-8 md:gap-12 group"
+                        >
                         {/* Status Strip */}
                         <div className={`absolute left-0 top-12 bottom-12 w-2 rounded-r-full transition-all duration-500 ${
                            app.status === 'hired' ? 'bg-emerald-500' : 

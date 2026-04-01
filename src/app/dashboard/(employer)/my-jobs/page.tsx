@@ -90,17 +90,17 @@ export default function MyJobs() {
       >
         <div className="space-y-12 max-w-7xl mx-auto">
           {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
             <div className="space-y-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-black uppercase tracking-wider border border-primary/20">
                 <Briefcase className="w-3 h-3" /> Employer Command Center
               </div>
-              <h1 className="text-4xl font-black text-foreground tracking-tight leading-tight italic">Manage Postings</h1>
-              <p className="text-muted-foreground font-medium max-w-md">Control your active listings, track candidate flow, and optimize your recruitment pipeline.</p>
+              <h1 className="text-3xl md:text-4xl font-black text-foreground tracking-tight leading-tight italic uppercase">Manage Postings</h1>
+              <p className="text-muted-foreground font-medium max-w-md text-sm">Control your active listings, track candidate flow, and optimize your recruitment pipeline.</p>
             </div>
             
-            <Link href="/dashboard/post-job">
-              <Button className="h-16 px-10 rounded-2xl font-black text-sm shadow-2xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all bg-primary hover:bg-primary/90 text-white flex items-center gap-2">
+            <Link href="/dashboard/post-job" className="w-full lg:w-auto">
+              <Button className="w-full h-14 md:h-16 px-10 rounded-2xl font-black text-sm shadow-2xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all bg-primary hover:bg-primary/90 text-white flex items-center justify-center gap-2">
                  <Plus className="w-5 h-5" /> Post New Job
               </Button>
             </Link>
@@ -159,7 +159,7 @@ export default function MyJobs() {
               <motion.div 
                 key="table"
                 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                className="bg-card border border-border shadow-2xl shadow-primary/5 rounded-[3rem] overflow-hidden"
+                className="bg-card border border-border shadow-2xl shadow-primary/5 rounded-[2rem] md:rounded-[3rem] overflow-hidden"
               >
                 <div className="overflow-x-auto">
                   <table className="w-full text-left">
