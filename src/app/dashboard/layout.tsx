@@ -30,24 +30,22 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
     jobseeker: [
       { name: 'Overview', href: '/dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
       { name: 'My Profile', href: '/dashboard/profile', icon: <User className="w-5 h-5" /> },
-      { name: 'My Applications', href: '/dashboard/applications', icon: <FileText className="w-5 h-5" /> },
+      { name: 'My Applications', href: '/dashboard/my-applications', icon: <FileText className="w-5 h-5" /> },
       { name: 'Saved Jobs', href: '/dashboard/saved-jobs', icon: <Bookmark className="w-5 h-5" /> },
-      { name: 'AI Career Assistant', href: '/dashboard/ai-assistant', icon: <Sparkles className="w-5 h-5" /> },
+      { name: 'AI Career Path', href: '/dashboard/ai-assistant', icon: <Sparkles className="w-5 h-5" /> },
     ],
     employer: [
       { name: 'Overview', href: '/dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
       { name: 'Post a Job', href: '/dashboard/post-job', icon: <PlusCircle className="w-5 h-5" /> },
-      { name: 'My Job Posts', href: '/dashboard/jobs', icon: <Briefcase className="w-5 h-5" /> },
-      { name: 'Applications', href: '/dashboard/applicants', icon: <Users className="w-5 h-5" /> },
-      { name: 'Analytics', href: '/dashboard/analytics', icon: <BarChart className="w-5 h-5" /> },
+      { name: 'My Jobs', href: '/dashboard/my-jobs', icon: <Briefcase className="w-5 h-5" /> },
+      { name: 'Applications', href: '/dashboard/applications', icon: <Users className="w-5 h-5" /> },
     ],
     admin: [
-      { name: 'Overview', href: '/dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
-      { name: 'Manage Users', href: '/dashboard/users', icon: <Users className="w-5 h-5" /> },
-      { name: 'Manage Jobs', href: '/dashboard/jobs', icon: <Briefcase className="w-5 h-5" /> },
-      { name: 'Manage Applications', href: '/dashboard/applications', icon: <FileText className="w-5 h-5" /> },
+      { name: 'Console', href: '/dashboard/overview', icon: <LayoutDashboard className="w-5 h-5" /> },
+      { name: 'Citizens', href: '/dashboard/manage-users', icon: <Users className="w-5 h-5" /> },
+      { name: 'Listings', href: '/dashboard/manage-jobs', icon: <Briefcase className="w-5 h-5" /> },
+      { name: 'Submissions', href: '/dashboard/manage-applications', icon: <FileText className="w-5 h-5" /> },
       { name: 'Analytics', href: '/dashboard/analytics', icon: <BarChart className="w-5 h-5" /> },
-      { name: 'Settings', href: '/dashboard/settings', icon: <Settings className="w-5 h-5" /> },
     ],
   };
 

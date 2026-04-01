@@ -2,12 +2,14 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle2, Star, Sparkles, MessageSquare, Briefcase, GraduationCap, Building2, LayoutGrid, Info, ChevronRight, Loader2 } from 'lucide-react';
+import { CheckCircle2, Star, Sparkles, MessageSquare, Briefcase, GraduationCap, Building2, LayoutGrid, Info, ChevronRight, Loader2, User } from 'lucide-react';
 import { IJob } from '@/types/job';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
-import axios from 'axios';
+import Input from '@/components/ui/Input';
 import { toast } from 'react-hot-toast';
+import { useReviews, useCreateReview, useReviewSummary } from '@/hooks/useReviews';
+import { useAuth } from '@/providers/AuthProvider';
 
 interface JobTabsProps {
   job: IJob;
@@ -19,21 +21,60 @@ export default function JobTabs({ job }: JobTabsProps) {
   const [activeTab, setActiveTab] = useState(TABS[0]);
   const [aiReviewSummary, setAiReviewSummary] = useState<string | null>(null);
   const [isSummarizing, setIsSummarizing] = useState(false);
+  const [isWritingReview, setIsWritingReview] = useState(false);
+  
+  // Review Form state
+  const [rating, setRating] = useState(5);
+  const [title, setTitle] = useState('');
+  const [comment, setComment] = useState('');
+  const [pros, setPros] = useState('');
+  const [cons, setCons] = useState('');
 
-  const generateAISummary = async () => {
+  const { user } = useAuth();
+  const { data: reviews = [], isLoading: isLoadingReviews } = useReviews(job.company); // Using company name as id if real ID not available
+  const createReviewMutation = useCreateReview();
+  const summaryMutation = useReviewSummary();
+
+  const handleGenerateSummary = async () => {
+    if (reviews.length < 2) return;
     setIsSummarizing(true);
     try {
-      const response = await axios.post('https://hirehub-server-ydm5.onrender.com/api/ai/review-summary', {
-        companyId: job.company, // Assuming company name used as proxy or id
-      });
-      setAiReviewSummary(response.data.data);
+      const summary = await summaryMutation.mutateAsync(
+        reviews.map((r: any) => ({ rating: r.rating, comment: r.comment }))
+      );
+      setAiReviewSummary(summary);
       toast.success('AI summary generated! ✨');
     } catch (error) {
-      console.error(error);
-      toast.error('Failed to generate AI summary');
+      toast.error('AI is unavailable, please try again');
     } finally {
       setIsSummarizing(false);
     }
+  };
+
+  const handleSubmitReview = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title || comment.length < 50) {
+      toast.error('Title and comment (min 50 chars) are required.');
+      return;
+    }
+
+    createReviewMutation.mutate({
+      companyId: job.company,
+      rating,
+      title,
+      comment,
+      pros,
+      cons
+    }, {
+      onSuccess: () => {
+        setIsWritingReview(false);
+        setTitle('');
+        setComment('');
+        setPros('');
+        setCons('');
+        setRating(5);
+      }
+    });
   };
 
   return (
@@ -68,7 +109,6 @@ export default function JobTabs({ job }: JobTabsProps) {
             animate={{ opacity: 1, x: 0 }}
             className="space-y-10"
           >
-            {/* About the role */}
             <section className="space-y-4">
               <h3 className="text-xl font-bold flex items-center gap-2.5">
                 <Info className="w-5 h-5 text-primary" />
@@ -79,7 +119,6 @@ export default function JobTabs({ job }: JobTabsProps) {
               </p>
             </section>
 
-            {/* Key Responsibilities */}
             <section className="space-y-5">
               <h3 className="text-xl font-bold flex items-center gap-2.5">
                 <LayoutGrid className="w-5 h-5 text-primary" />
@@ -95,7 +134,6 @@ export default function JobTabs({ job }: JobTabsProps) {
               </div>
             </section>
 
-             {/* Required Skills */}
              <section className="space-y-4">
                <h3 className="text-xl font-bold flex items-center gap-2.5">
                  <Briefcase className="w-5 h-5 text-primary" />
@@ -110,7 +148,6 @@ export default function JobTabs({ job }: JobTabsProps) {
                </div>
              </section>
 
-             {/* Benefits */}
              {job.benefits && job.benefits.length > 0 && (
                <section className="space-y-5">
                  <h3 className="text-xl font-bold flex items-center gap-2.5">
@@ -121,7 +158,7 @@ export default function JobTabs({ job }: JobTabsProps) {
                     {job.benefits.map((benefit, i) => (
                       <div key={i} className="flex items-center gap-3 p-4 rounded-xl border border-border/50 bg-card hover:shadow-md transition-all group">
                          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary transition-colors group-hover:text-white">
-                           <LayoutGrid className="w-5 h-5" />
+                           <LayoutGrid className="w-4 h-4" />
                          </div>
                          <span className="font-bold text-foreground/80">{benefit}</span>
                       </div>
@@ -160,10 +197,9 @@ export default function JobTabs({ job }: JobTabsProps) {
                  <GraduationCap className="w-5 h-5 text-primary" />
                  Education & Qualifications
                </h3>
-               <div className="bg-card border border-border/60 p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+               <div className="bg-card border border-border/60 p-6 rounded-2xl shadow-sm">
                   <p className="text-foreground/80 font-medium leading-relaxed">
-                    Minimum Bachelor&apos;s degree in Computer Science, engineering or equivalent experience in the relevant field. 
-                    Advanced certifications in cloud or modern frameworks is a huge plus.
+                    Requirement of {job.experience} minimum. Education in a relevant field or equivalent practical experience.
                   </p>
                </div>
             </section>
@@ -180,24 +216,20 @@ export default function JobTabs({ job }: JobTabsProps) {
                <div className="space-y-4">
                   <h3 className="text-xl font-bold flex items-center gap-2.5">
                     <Building2 className="w-5 h-5 text-primary" />
-                    Company Profiles
+                    Company Profile
                   </h3>
                   <div className="space-y-3 bg-card border border-border p-6 rounded-2xl shadow-sm">
                      <div className="flex justify-between text-sm py-2 border-b border-border/40">
+                        <span className="text-muted-foreground font-medium">Company Name</span>
+                        <span className="text-foreground font-bold">{job.company}</span>
+                     </div>
+                     <div className="flex justify-between text-sm py-2 border-b border-border/40">
+                        <span className="text-muted-foreground font-medium">Location</span>
+                        <span className="text-foreground font-bold">{job.location}</span>
+                     </div>
+                     <div className="flex justify-between text-sm py-2 border-b border-border/40">
                         <span className="text-muted-foreground font-medium">Industry</span>
-                        <span className="text-foreground font-bold">Tech / SaaS</span>
-                     </div>
-                     <div className="flex justify-between text-sm py-2 border-b border-border/40">
-                        <span className="text-muted-foreground font-medium">Company size</span>
-                        <span className="text-foreground font-bold">250 - 500 Employees</span>
-                     </div>
-                     <div className="flex justify-between text-sm py-2 border-b border-border/40">
-                        <span className="text-muted-foreground font-medium">Type</span>
-                        <span className="text-foreground font-bold">Private Limited</span>
-                     </div>
-                     <div className="flex justify-between text-sm py-2">
-                        <span className="text-muted-foreground font-medium">Founded</span>
-                        <span className="text-foreground font-bold">2016 (8 years ago)</span>
+                        <span className="text-foreground font-bold">{job.category}</span>
                      </div>
                   </div>
                </div>
@@ -205,25 +237,8 @@ export default function JobTabs({ job }: JobTabsProps) {
                <div className="space-y-4 pt-1">
                   <h4 className="text-lg font-bold text-foreground/80">About {job.company}</h4>
                   <p className="text-muted-foreground leading-relaxed">
-                    {job.company} is a leading innovator in the space. We&apos;re on a mission to reshape the industry with technology that empowers millions of people worldwide. Join our world-class team.
+                    {job.company} is a leading innovator in {job.category}. Join our world-class team as we continue to push boundaries and deliver excellence.
                   </p>
-                  <Button variant="ghost" className="p-0 text-primary font-bold hover:bg-transparent decoration-2 h-auto gap-2">
-                    Visit Website
-                    <ChevronRight className="w-4 h-4" />
-                  </Button>
-               </div>
-            </section>
-
-            <section className="bg-primary/5 p-8 rounded-2xl border border-primary/10 relative overflow-hidden group">
-               <div className="absolute top-0 right-0 p-8 text-primary/10 -mr-4 -mt-4 opacity-50 group-hover:scale-110 transition-transform">
-                  <CheckCircle2 className="w-32 h-32" />
-               </div>
-               <div className="relative z-10 space-y-4 max-w-lg">
-                 <h3 className="text-2xl font-black text-foreground">Why join us?</h3>
-                 <p className="text-muted-foreground font-medium leading-relaxed">
-                   We believe in fostering a culture of ownership and innovation. We provide top-tier health benefits, competitive compensation, and a clear path for career growth. 
-                   Our remote-first culture ensures a healthy work-life balance for all our team members.
-                 </p>
                </div>
             </section>
           </motion.div>
@@ -239,29 +254,36 @@ export default function JobTabs({ job }: JobTabsProps) {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 p-8 bg-card border border-border rounded-3xl shadow-sm">
                <div className="flex items-center gap-6">
                   <div className="text-center">
-                    <div className="text-5xl font-black text-foreground">4.8</div>
+                    <div className="text-5xl font-black text-foreground">
+                       {(reviews.reduce((acc: number, r: any) => acc + r.rating, 0) / (reviews.length || 1)).toFixed(1)}
+                    </div>
                     <div className="flex items-center justify-center gap-0.5 mt-2 text-amber-500">
-                       <Star className="w-4 h-4 fill-current" />
-                       <Star className="w-4 h-4 fill-current" />
-                       <Star className="w-4 h-4 fill-current" />
-                       <Star className="w-4 h-4 fill-current" />
-                       <Star className="w-4 h-4 fill-current opacity-50" />
+                       {[1, 2, 3, 4, 5].map((s) => (
+                         <Star key={s} className={`w-4 h-4 ${s <= Math.round(reviews.reduce((acc: number, r: any) => acc + r.rating, 0) / (reviews.length || 1)) ? 'fill-current' : 'opacity-30'}`} />
+                       ))}
                     </div>
                   </div>
                   <div className="space-y-2 hidden xs:block">
-                     <p className="text-sm font-bold text-foreground">Excellent Rating</p>
-                     <p className="text-xs text-muted-foreground font-medium">Based on 124 reviews</p>
+                     <p className="text-sm font-bold text-foreground">{reviews.length > 0 ? (reviews.length >= 2 ? 'Highly Recommended' : 'New Platform') : 'No Reviews Yet'}</p>
+                     <p className="text-xs text-muted-foreground font-medium">Based on {reviews.length} reviews</p>
                   </div>
                </div>
 
-               <Button 
-                onClick={generateAISummary}
-                disabled={isSummarizing || !!aiReviewSummary}
-                className="gap-2.5 h-12 px-6 rounded-2xl font-bold group relative overflow-hidden active:scale-95 transition-all w-full sm:w-auto"
-              >
-                {isSummarizing ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform" />}
-                {isSummarizing ? 'Analyzing...' : aiReviewSummary ? 'AI Summary Updated' : 'AI Review Summary'}
-              </Button>
+               <div className="flex gap-4 w-full sm:w-auto">
+                 <Button 
+                  onClick={handleGenerateSummary}
+                  disabled={isSummarizing || !!aiReviewSummary || reviews.length < 2}
+                  className="gap-2.5 h-12 px-6 rounded-2xl font-bold group relative overflow-hidden active:scale-95 transition-all flex-1 sm:flex-initial"
+                >
+                  {isSummarizing ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform" />}
+                  {isSummarizing ? 'Generating Summary...' : aiReviewSummary ? 'Summary Ready' : 'AI Summary ✨'}
+                </Button>
+                {user?.role === 'jobseeker' && (
+                  <Button variant="outline" onClick={() => setIsWritingReview(true)} className="h-12 rounded-2xl font-bold px-6 border-primary/20 text-primary hover:bg-primary/5">
+                    Write Review
+                  </Button>
+                )}
+               </div>
             </div>
 
             {/* AI Review Summary Card */}
@@ -276,62 +298,132 @@ export default function JobTabs({ job }: JobTabsProps) {
                        <Sparkles className="w-24 h-24 text-primary" />
                     </div>
                     <div className="flex items-center gap-2 mb-4">
-                       <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white scale-90">
-                          <Sparkles className="w-4 h-4" />
-                       </div>
+                       <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white scale-90 text-sm font-bold">✨</div>
                        <h4 className="text-lg font-black text-primary uppercase tracking-wider">AI Insights</h4>
                     </div>
-                    <p className="text-foreground/90 font-medium text-lg leading-relaxed first-letter:text-3xl first-letter:font-black first-letter:mr-1 first-letter:text-primary">
+                    <p className="text-foreground/90 font-medium text-lg leading-relaxed">
                       {aiReviewSummary}
                     </p>
                  </motion.div>
                )}
             </AnimatePresence>
 
+            {/* Review Form Drawer */}
+            <AnimatePresence>
+               {isWritingReview && (
+                 <motion.div 
+                   initial={{ height: 0, opacity: 0 }}
+                   animate={{ height: 'auto', opacity: 1 }}
+                   exit={{ height: 0, opacity: 0 }}
+                   className="overflow-hidden"
+                 >
+                    <form onSubmit={handleSubmitReview} className="p-8 bg-muted/40 border border-border rounded-3xl space-y-6">
+                       <div className="flex items-center justify-between">
+                          <h4 className="text-lg font-bold">Write Your Review</h4>
+                          <div className="flex gap-1.5">
+                             {[1, 2, 3, 4, 5].map((star) => (
+                               <button 
+                                key={star} 
+                                type="button" 
+                                onClick={() => setRating(star)}
+                                className={`w-8 h-8 transition-all ${star <= rating ? 'text-amber-500' : 'text-muted-foreground/30'}`}
+                               >
+                                  <Star className={`w-6 h-6 ${star <= rating ? 'fill-current' : ''}`} />
+                               </button>
+                             ))}
+                          </div>
+                       </div>
+                       
+                       <div className="grid grid-cols-1 gap-4">
+                          <Input 
+                            placeholder="Title of your review" 
+                            value={title} 
+                            onChange={(e) => setTitle(e.target.value)} 
+                            required 
+                          />
+                          <textarea 
+                            className="w-full min-h-[120px] rounded-xl border border-input bg-background p-4 text-sm focus:ring-1 focus:ring-primary outline-none transition-all"
+                            placeholder="Your detailed review (min 50 characters)..."
+                            value={comment}
+                            onChange={(e) => setComment(e.target.value)}
+                            required
+                          />
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                             <Input placeholder="Pros (Optional)" value={pros} onChange={(e) => setPros(e.target.value)} />
+                             <Input placeholder="Cons (Optional)" value={cons} onChange={(e) => setCons(e.target.value)} />
+                          </div>
+                       </div>
+
+                       <div className="flex justify-end gap-3">
+                          <Button variant="ghost" type="button" onClick={() => setIsWritingReview(false)}>Cancel</Button>
+                          <Button type="submit" disabled={createReviewMutation.isPending}>
+                            {createReviewMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Submit Review'}
+                          </Button>
+                       </div>
+                    </form>
+                 </motion.div>
+               )}
+            </AnimatePresence>
+
             {/* Review List */}
             <div className="space-y-8">
-               <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-black flex items-center gap-2.5 uppercase tracking-tight">
-                    <MessageSquare className="w-5 h-5 text-primary" />
-                    Latest Reviews
-                  </h3>
-                  <Button variant="outline" className="text-xs font-bold uppercase rounded-lg">Write a Review</Button>
-               </div>
+               <h3 className="text-xl font-black flex items-center gap-2.5 uppercase tracking-tight">
+                 <MessageSquare className="w-5 h-5 text-primary" />
+                 Latest Reviews
+               </h3>
 
                <div className="space-y-6">
-                 {[1, 2].map((review) => (
-                   <div key={review} className="p-8 bg-card border border-border/60 rounded-3xl hover:border-primary/20 transition-all hover:shadow-lg relative overflow-hidden group">
-                      <div className="flex justify-between items-start mb-6">
-                         <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-2xl bg-muted flex items-center justify-center font-bold text-muted-foreground/80 text-xl uppercase border-2 border-border/40">J</div>
-                            <div>
-                               <p className="font-black text-foreground">John Doe</p>
-                               <p className="text-xs text-muted-foreground font-semibold">Senior Developer • 2 weeks ago</p>
-                            </div>
-                         </div>
-                         <div className="px-3 py-1 bg-green-500/10 text-green-600 rounded-lg text-xs font-black flex items-center gap-1.5 border border-green-500/20 shadow-sm">
-                            <Star className="w-3 h-3 fill-current" /> 4.5
-                         </div>
-                      </div>
+                 {isLoadingReviews ? (
+                    <div className="flex justify-center p-10"><Loader2 className="animate-spin text-primary" /></div>
+                 ) : reviews.length > 0 ? (
+                    reviews.map((review: any) => (
+                     <div key={review._id} className="p-8 bg-card border border-border/60 rounded-3xl hover:border-primary/20 transition-all hover:shadow-lg relative overflow-hidden group">
+                        <div className="flex justify-between items-start mb-6">
+                           <div className="flex items-center gap-4">
+                              <div className="w-12 h-12 rounded-2xl bg-muted flex items-center justify-center font-bold text-muted-foreground/80 text-xl uppercase border-2 border-border/40">
+                                 {review.user?.name?.[0] || <User />}
+                              </div>
+                              <div>
+                                 <p className="font-black text-foreground">{review.user?.name || 'Anonymous'}</p>
+                                 <p className="text-xs text-muted-foreground font-semibold">
+                                   Verified Reviewer • {new Date(review.createdAt).toLocaleDateString()}
+                                 </p>
+                              </div>
+                           </div>
+                           <div className="px-3 py-1 bg-green-500/10 text-green-600 rounded-lg text-xs font-black flex items-center gap-1.5 border border-green-500/20 shadow-sm">
+                              <Star className="w-3 h-3 fill-current" /> {review.rating}
+                           </div>
+                        </div>
 
-                      <h4 className="text-lg font-black text-foreground mb-3 leading-tight">&quot;A truly innovative place with great people and growth&quot;</h4>
-                      <p className="text-foreground/70 font-medium leading-relaxed mb-6">
-                        I&apos;ve been working here for over 2 years and the culture is amazing. The challenges we face keep us engaged and the leadership truly cares about individual growth. 
-                        Best benefits package I&apos;ve ever had in my career.
-                      </p>
+                        <h4 className="text-lg font-black text-foreground mb-3 leading-tight leading-tight">&quot;{review.title}&quot;</h4>
+                        <p className="text-foreground/70 font-medium leading-relaxed mb-6">
+                          {review.comment}
+                        </p>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                         <div className="p-4 rounded-2xl bg-green-500/5 border border-green-500/10 hover:bg-green-500/10 transition-colors">
-                            <p className="text-xs font-black text-green-700 uppercase mb-2">Pros</p>
-                            <p className="text-sm font-medium text-foreground/80 italic">Remote work, Great salary, Innovation, Team culture.</p>
-                         </div>
-                         <div className="p-4 rounded-2xl bg-red-500/5 border border-red-500/10 hover:bg-red-500/10 transition-colors">
-                            <p className="text-xs font-black text-red-700 uppercase mb-2">Cons</p>
-                            <p className="text-sm font-medium text-foreground/80 italic">Meetings across timezones, High pressure environment occasionally.</p>
-                         </div>
-                      </div>
-                   </div>
-                 ))}
+                        {(review.pros || review.cons) && (
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                             {review.pros && (
+                               <div className="p-4 rounded-2xl bg-green-500/5 border border-green-500/10">
+                                  <p className="text-xs font-black text-green-700 uppercase mb-2">Pros</p>
+                                  <p className="text-sm font-medium text-foreground/80 italic">{review.pros}</p>
+                               </div>
+                             )}
+                             {review.cons && (
+                               <div className="p-4 rounded-2xl bg-red-500/5 border border-red-500/10">
+                                  <p className="text-xs font-black text-red-700 uppercase mb-2">Cons</p>
+                                  <p className="text-sm font-medium text-foreground/80 italic">{review.cons}</p>
+                               </div>
+                             )}
+                          </div>
+                        )}
+                     </div>
+                    ))
+                 ) : (
+                    <div className="text-center py-20 bg-muted/20 border-2 border-dashed rounded-3xl">
+                       <MessageSquare className="w-12 h-12 mx-auto text-muted-foreground/30 mb-4" />
+                       <p className="text-muted-foreground font-medium">No reviews yet for this company.</p>
+                    </div>
+                 )}
                </div>
             </div>
           </motion.div>

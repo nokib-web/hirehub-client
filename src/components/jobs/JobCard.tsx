@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { MapPin, Briefcase, DollarSign, Bookmark, ArrowRight, Clock } from 'lucide-react';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
-import { IJob } from '@/types/job';
+import { IJob } from '@/types';
 import { motion } from 'framer-motion';
 
 interface JobCardProps {
@@ -14,6 +14,28 @@ interface JobCardProps {
 
 export default function JobCard({ job }: JobCardProps) {
   const daysAgo = Math.floor((new Date().getTime() - new Date(job.createdAt).getTime()) / (1000 * 3600 * 24));
+
+  const [isSaved, setIsSaved] = React.useState(false);
+
+  React.useEffect(() => {
+     const savedJobs = JSON.parse(localStorage.getItem('hirehub_saved_jobs') || '[]');
+     setIsSaved(savedJobs.includes(job._id || job.id));
+  }, [job._id, job.id]);
+
+  const toggleBookmark = (e: React.MouseEvent) => {
+     e.preventDefault();
+     e.stopPropagation();
+     let savedJobs = JSON.parse(localStorage.getItem('hirehub_saved_jobs') || '[]');
+     const jobId = job._id || job.id;
+     if (isSaved) {
+        savedJobs = savedJobs.filter((id: string) => id !== jobId);
+        // import toast here might be hard, I'll use common sense or just check if prompt allows hooks. Yes, it's a client component.
+     } else {
+        savedJobs.push(jobId);
+     }
+     localStorage.setItem('hirehub_saved_jobs', JSON.stringify(savedJobs));
+     setIsSaved(!isSaved);
+  };
 
   return (
     <motion.div 
@@ -35,7 +57,7 @@ export default function JobCard({ job }: JobCardProps) {
           <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
             <div className="space-y-1">
               <Link 
-                href={`/jobs/${job._id}`}
+                href={`/jobs/${job._id || job.id}`}
                 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors cursor-pointer"
               >
                 {job.title}
@@ -55,8 +77,11 @@ export default function JobCard({ job }: JobCardProps) {
                  <Clock className="w-3.5 h-3.5" />
                  {daysAgo === 0 ? 'Today' : `${daysAgo}d ago`}
               </span>
-              <button className="p-2 rounded-full hover:bg-muted text-muted-foreground hover:text-primary transition-colors">
-                <Bookmark className="w-4 h-4" />
+              <button 
+                onClick={toggleBookmark}
+                className={`p-2 rounded-full hover:bg-muted transition-colors ${isSaved ? 'text-primary' : 'text-muted-foreground hover:text-primary'}`}
+              >
+                <Bookmark className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
               </button>
             </div>
           </div>

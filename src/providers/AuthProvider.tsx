@@ -9,7 +9,7 @@ interface AuthContextType {
   user: IUser | null;
   token: string | null;
   isLoading: boolean;
-  login: (token: string) => void;
+  login: (token: string, redirectTo?: string) => void;
   logout: () => void;
   isAuthenticated: boolean;
 }
@@ -53,11 +53,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [fetchProfile]);
 
-  const login = useCallback((newToken: string) => {
+  const login = useCallback((newToken: string, redirectTo?: string) => {
     localStorage.setItem('token', newToken);
     setToken(newToken);
     fetchProfile();
-    router.push('/dashboard');
+    router.push(redirectTo || '/dashboard');
   }, [fetchProfile, router]);
 
   const isAuthenticated = !!token;

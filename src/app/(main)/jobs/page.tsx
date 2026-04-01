@@ -1,37 +1,90 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Filter, LayoutGrid, List, ChevronLeft, ChevronRight, Inbox } from 'lucide-react';
+import { Filter, LayoutGrid, List, ChevronLeft, ChevronRight, Inbox, Loader2 } from 'lucide-react';
 import Filters from '@/components/jobs/Filters';
 import JobCard from '@/components/jobs/JobCard';
 import JobSkeleton from '@/components/jobs/JobSkeleton';
 import { useJobs } from '@/hooks/useJobs';
 import Button from '@/components/ui/Button';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function JobsPage() {
-  const { data, isLoading, isError } = useJobs();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { data, isLoading, isError, refetch } = useJobs();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const jobs = data?.jobs || [];
   const total = data?.total || 0;
   const totalPages = data?.totalPages || 1;
-  const currentPage = data?.page || 1;
+  const currentPage = Number(searchParams.get('page')) || 1;
+  const currentSort = searchParams.get('sortBy') || 'createdAt';
+  const currentOrder = searchParams.get('order') || 'desc';
+
+  const updateParam = (key: string, value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (value) {
+      params.set(key, value);
+    } else {
+      params.delete(key);
+    }
+    // If updating filters/sort, reset page
+    if (key !== 'page') params.delete('page');
+    router.push(`/jobs?${params.toString()}`);
+  };
+
+  const handlePageChange = (page: number) => {
+    updateParam('page', page.toString());
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    let sortBy = 'createdAt';
+    let order = 'desc';
+
+    if (value === 'Salary (High to Low)') {
+      sortBy = 'salary.max';
+      order = 'desc';
+    } else if (value === 'Most Applied') {
+      sortBy = 'applicantsCount';
+      order = 'desc';
+    }
+
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('sortBy', sortBy);
+    params.set('order', order);
+    params.delete('page');
+    router.push(`/jobs?${params.toString()}`);
+  };
+
+  const getSortLabel = () => {
+    if (currentSort === 'salary.max') return 'Salary (High to Low)';
+    if (currentSort === 'applicantsCount') return 'Most Applied';
+    return 'Newest First';
+  };
 
   if (isError) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-6">
-        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center text-red-600 mb-4">
-          <Inbox className="w-8 h-8" />
+      <div className="max-w-7xl mx-auto px-4 py-20 flex flex-col items-center justify-center text-center">
+        <div className="w-20 h-20 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center text-red-600 mb-6">
+          <Inbox className="w-10 h-10" />
         </div>
-        <h3 className="text-xl font-bold text-foreground">Error loading jobs</h3>
-        <p className="text-muted-foreground mt-2 max-w-xs">
-          Something went wrong while fetching job listings. Please try again later.
+        <h3 className="text-2xl font-bold text-foreground">Unable to load jobs. Please try again.</h3>
+        <p className="text-muted-foreground mt-2 max-w-sm mb-8 text-lg">
+          Please check your connection. The server might be waking up.
         </p>
-        <Button onClick={() => window.location.reload()} className="mt-6">
-          Try Again
-        </Button>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <Button onClick={() => refetch()} className="px-8 py-6 h-auto text-lg font-bold shadow-lg shadow-primary/20">
+            Retry
+          </Button>
+          <Button variant="outline" onClick={() => window.location.reload()} className="px-8 py-6 h-auto text-lg font-bold">
+            Reload Page
+          </Button>
+        </div>
       </div>
     );
   }
@@ -92,7 +145,12 @@ export default function JobsPage() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-card/50 p-4 rounded-xl border border-border backdrop-blur-sm">
             <div className="space-y-0.5">
               <h2 className="text-lg font-bold text-foreground">
-                {isLoading ? 'Finding jobs...' : `Showing ${jobs.length} of ${total} jobs`}
+                {isLoading ? (
+                  <span className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-primary rounded-full animate-bounce" />
+                    Searching for opportunities...
+                  </span>
+                ) : `Showing ${jobs.length} of ${total} jobs`}
               </h2>
               {jobs.length > 0 && !isLoading && (
                 <p className="text-xs text-muted-foreground font-medium">
@@ -117,21 +175,35 @@ export default function JobsPage() {
                 </button>
               </div>
               
-              <select className="bg-background border border-border rounded-lg text-sm px-3 py-2 outline-none focus:ring-1 focus:ring-primary h-10 font-medium cursor-pointer min-w-[140px]">
+              <select 
+                value={getSortLabel()}
+                onChange={handleSortChange}
+                className="bg-background border border-border rounded-lg text-sm px-3 py-2 outline-none focus:ring-1 focus:ring-primary h-10 font-medium cursor-pointer min-w-[140px]"
+              >
                 <option>Newest First</option>
                 <option>Salary (High to Low)</option>
                 <option>Most Applied</option>
-                <option>Relevant</option>
               </select>
             </div>
           </div>
 
           {/* Job List/Grid */}
-          <div className={`grid gap-5 ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'}`}>
+          <div className={`grid gap-5 ${viewMode === 'grid' && !isLoading ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'}`}>
             {isLoading ? (
-              Array.from({ length: 5 }).map((_, i) => (
-                <JobSkeleton key={i} />
-              ))
+              <div className="space-y-6 w-full">
+                <div className="flex flex-col items-center justify-center py-10 text-center bg-primary/5 rounded-2xl border border-primary/10 mb-6 animate-pulse">
+                  <p className="text-primary font-bold text-lg mb-2">Searching live database...</p>
+                  <div className="flex items-center gap-2">
+                     <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                     <p className="text-muted-foreground text-sm">Please wait, servers are responding.</p>
+                  </div>
+                </div>
+                <div className={`grid gap-5 ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'}`}>
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <JobSkeleton key={i} />
+                  ))}
+                </div>
+              </div>
             ) : jobs.length > 0 ? (
               jobs.map((job) => (
                 <JobCard key={job._id} job={job} />
@@ -143,19 +215,26 @@ export default function JobsPage() {
                 </div>
                 <h3 className="text-xl font-bold text-foreground mb-2">No jobs found</h3>
                 <p className="text-muted-foreground max-w-sm mb-6">
-                  We couldn&apos;t find any jobs matching your current filter criteria. Try adjusting your filters or clearing them.
+                  Try adjusting your filters or clearing them to see more opportunities.
                 </p>
-                <Button onClick={() => window.location.href='/jobs'} variant="outline" className="px-6">
+                <Button onClick={() => router.push('/jobs')} variant="outline" className="px-6">
                   Clear All Filters
                 </Button>
               </div>
             )}
           </div>
 
+
           {/* Pagination */}
           {totalPages > 1 && !isLoading && (
             <div className="flex items-center justify-center gap-2 pt-10">
-              <Button variant="outline" size="sm" className="w-10 h-10 p-0" disabled={currentPage === 1}>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-10 h-10 p-0" 
+                disabled={currentPage === 1}
+                onClick={() => handlePageChange(currentPage - 1)}
+              >
                 <ChevronLeft className="w-4 h-4" />
               </Button>
               {Array.from({ length: totalPages }).map((_, i) => (
@@ -164,11 +243,18 @@ export default function JobsPage() {
                   variant={currentPage === i + 1 ? 'primary' : 'outline'}
                   size="sm"
                   className="w-10 h-10 p-0 font-medium"
+                  onClick={() => handlePageChange(i + 1)}
                 >
                   {i + 1}
                 </Button>
               ))}
-              <Button variant="outline" size="sm" className="w-10 h-10 p-0" disabled={currentPage === totalPages}>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-10 h-10 p-0" 
+                disabled={currentPage === totalPages}
+                onClick={() => handlePageChange(currentPage + 1)}
+              >
                 <ChevronRight className="w-4 h-4" />
               </Button>
             </div>

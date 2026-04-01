@@ -30,3 +30,7 @@ body {
     @apply border-[var(--border)];
   }
 }
+
+.chat-panel-safe {
+  isolation: isolate;
+}

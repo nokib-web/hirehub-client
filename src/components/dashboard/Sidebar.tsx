@@ -40,10 +40,11 @@ const Sidebar = () => {
       { name: 'Applications', href: '/dashboard/applications', icon: Users },
     ],
     admin: [
-      { name: 'Overview', href: '/dashboard/admin/overview', icon: LayoutDashboard },
-      { name: 'Manage Users', href: '/dashboard/admin/manage-users', icon: Users },
-      { name: 'Manage Jobs', href: '/dashboard/admin/manage-jobs', icon: Briefcase },
-      { name: 'Analytics', href: '/dashboard/admin/analytics', icon: BarChart3 },
+      { name: 'Console', href: '/dashboard/overview', icon: LayoutDashboard },
+      { name: 'Citizens', href: '/dashboard/manage-users', icon: Users },
+      { name: 'Listings', href: '/dashboard/manage-jobs', icon: Briefcase },
+      { name: 'Pipeline', href: '/dashboard/manage-applications', icon: FileText },
+      { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
     ],
   };
 

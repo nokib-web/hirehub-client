@@ -11,21 +11,21 @@ import { Briefcase } from 'lucide-react';
 import { IJob } from '@/types/job';
 
 const FeaturedJobs = () => {
-  const { data: jobs, isLoading } = useQuery({
+  const { data: jobs = [], isLoading, isError } = useQuery({
     queryKey: ['featured-jobs'],
     queryFn: async () => {
-      try {
-        const response = await api.get('/jobs?isFeatured=true&limit=8');
-        return response.data.data;
-      } catch (err) {
-        console.error('Error fetching jobs:', err);
-        return mockJobs;
-      }
+      const response = await api.get('/jobs?isFeatured=true&limit=8');
+      return response.data.data;
     },
-    initialData: [],
   });
 
-  const displayJobs = jobs.length > 0 ? jobs : mockJobs;
+  if (isError) {
+    return (
+      <div className="py-24 text-center">
+         <h2 className="text-xl font-bold text-red-500">Unable to load featured jobs at this time.</h2>
+      </div>
+    );
+  }
 
   return (
     <section className="py-24 bg-zinc-50 dark:bg-zinc-950/50">
@@ -77,9 +77,7 @@ const FeaturedJobs = () => {
               </div>
             ))
           ) : (
-            displayJobs.map((job: unknown, index: number) => {
-              const j = job as IJob;
-              return (
+            jobs.map((j: IJob, index: number) => (
               <motion.div 
                 key={j._id || index}
                 initial={{ opacity: 0, y: 20 }}
@@ -89,13 +87,17 @@ const FeaturedJobs = () => {
               >
                 <JobCard job={j} />
               </motion.div>
-            );
-          })
+            ))
           )}
         </div>
 
         <div className="mt-16 text-center">
-          <Button size="lg" variant="outline" className="border-blue-200 dark:border-zinc-800 hover:border-blue-500 text-blue-600 dark:text-blue-400 group">
+          <Button 
+            onClick={() => window.location.href='/jobs'}
+            size="lg" 
+            variant="outline" 
+            className="border-blue-200 dark:border-zinc-800 hover:border-blue-500 text-blue-600 dark:text-blue-400 group"
+          >
             View All Jobs <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
           </Button>
         </div>
@@ -103,97 +105,5 @@ const FeaturedJobs = () => {
     </section>
   );
 };
-
-// Real relevant mock data for demonstration
-const mockJobs = [
-  {
-    _id: "1",
-    company: "Google",
-    title: "Senior Frontend Engineer (React)",
-    location: "Mountain View, CA",
-    type: "Full-time",
-    salary: { min: 150000, max: 220000, currency: 'USD', period: 'yearly' },
-    skills: ["React", "TypeScript", "Next.js"],
-    createdAt: new Date().toISOString(),
-    isFeatured: true
-  },
-  {
-    _id: "2",
-    company: "Meta",
-    title: "UI Designer",
-    location: "Remote",
-    type: "Remote",
-    salary: { min: 120000, max: 180000, currency: 'USD', period: 'yearly' },
-    skills: ["Figma", "Prototyping", "Design Systems"],
-    createdAt: new Date(Date.now() - 86400000).toISOString(),
-    isFeatured: true
-  },
-  {
-    _id: "3",
-    company: "Amazon",
-    title: "Backend Developer (Node.js)",
-    location: "Seattle, WA",
-    type: "Contract",
-    salary: { min: 130000, max: 190000, currency: 'USD', period: 'yearly' },
-    skills: ["Node.js", "AWS", "DynamoDB"],
-    createdAt: new Date(Date.now() - 172800000).toISOString(),
-    isFeatured: true
-  },
-  {
-    _id: "4",
-    company: "Netflix",
-    title: "Data Scientist",
-    location: "Los Gatos, CA",
-    type: "Full-time",
-    salary: { min: 160000, max: 250000, currency: 'USD', period: 'yearly' },
-    skills: ["Python", "Machine Learning", "PyTorch"],
-    createdAt: new Date(Date.now() - 259200000).toISOString(),
-    isFeatured: true
-  },
-  {
-    _id: "5",
-    company: "Stripe",
-    title: "Product Manager",
-    location: "San Francisco, CA",
-    type: "Full-time",
-    salary: { min: 170000, max: 230000, currency: 'USD', period: 'yearly' },
-    skills: ["Strategy", "Product Roadmap", "Analytics"],
-    createdAt: new Date(Date.now() - 345600000).toISOString(),
-    isFeatured: true
-  },
-  {
-    _id: "6",
-    company: "Tesla",
-    title: "Automotive Software Engineer",
-    location: "Palo Alto, CA",
-    type: "Full-time",
-    salary: { min: 140000, max: 210000, currency: 'USD', period: 'yearly' },
-    skills: ["C++", "Embedded Systems", "RTOS"],
-    createdAt: new Date(Date.now() - 432000000).toISOString(),
-    isFeatured: true
-  },
-  {
-    _id: "7",
-    company: "Microsoft",
-    title: "Solution Architect (Azure)",
-    location: "Redmond, WA",
-    type: "Full-time",
-    salary: { min: 160000, max: 240000, currency: 'USD', period: 'yearly' },
-    skills: ["Cloud", "DevOps", "Kubernetes"],
-    createdAt: new Date(Date.now() - 518400000).toISOString(),
-    isFeatured: true
-  },
-  {
-    _id: "8",
-    company: "Airbnb",
-    title: "Mobile App Developer",
-    location: "Remote",
-    type: "Hybrid",
-    salary: { min: 150000, max: 200000, currency: 'USD', period: 'yearly' },
-    skills: ["React Native", "iOS", "Android"],
-    createdAt: new Date(Date.now() - 604800000).toISOString(),
-    isFeatured: true
-  }
-] as unknown as IJob[];
 
 export default FeaturedJobs;

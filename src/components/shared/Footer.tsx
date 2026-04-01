@@ -15,12 +15,10 @@ const Footer = () => {
     jobSeekers: [
       { name: 'Browse Jobs', href: '/jobs' },
       { name: 'Companies', href: '/companies' },
-      { name: 'Career Advice', href: '/blog?cat=career-advice' },
-      { name: 'Resume Tips', href: '/blog?cat=resume-tips' },
       { name: 'Salary Guide', href: '/salary-guide' },
     ],
     employers: [
-      { name: 'Post a Job', href: '/jobs/new' },
+      { name: 'Post a Job', href: '/dashboard/post-job' },
       { name: 'Search Candidates', href: '/candidates' },
       { name: 'Pricing Plans', href: '/pricing' },
       { name: 'Recruitment Solutions', href: '/solutions' },
@@ -32,7 +30,9 @@ const Footer = () => {
       { name: 'Contact', href: '/contact' },
       { name: 'Privacy Policy', href: '/privacy' },
       { name: 'Terms of Service', href: '/terms' },
+      { name: 'Cookie Policy', href: '/cookies' },
     ]
+
   };
 
   const socialIcons = [

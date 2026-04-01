@@ -5,8 +5,33 @@ import { motion } from 'framer-motion';
 import { Search, MapPin, ArrowRight } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
+import { PLATFORM_STATS } from '@/lib/constants';
+
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+import api from '@/lib/axios';
 
 const HeroSection = () => {
+  const router = useRouter();
+  const [search, setSearch] = useState('');
+  const [location, setLocation] = useState('');
+
+  const { data: serverStats } = useQuery({
+    queryKey: ['platform-stats'],
+    queryFn: async () => {
+      const response = await api.get('/jobs/stats');
+      return response.data.data;
+    },
+  });
+
+  const handleSearch = () => {
+    const params = new URLSearchParams();
+    if (search) params.append('search', search);
+    if (location) params.append('location', location);
+    router.push(`/jobs?${params.toString()}`);
+  };
+
   const fadeInUp = {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
@@ -31,7 +56,7 @@ const HeroSection = () => {
         }}
       />
 
-      <div className="container relative z-10 px-4 mx-auto text-center">
+      <div className="container relative z-[1] px-4 mx-auto text-center">
         {/* Badge */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.8 }}
@@ -67,10 +92,19 @@ const HeroSection = () => {
           transition={{ ...fadeInUp.transition, delay: 0.4 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"
         >
-          <Button size="lg" className="bg-white text-blue-700 hover:bg-blue-50 px-8 py-6 text-lg rounded-full font-bold group">
+          <Button 
+            onClick={() => router.push('/jobs')}
+            size="lg" 
+            className="bg-white text-blue-700 hover:bg-blue-50 px-8 py-6 text-lg rounded-full font-bold group"
+          >
             Browse Jobs <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Button>
-          <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 px-8 py-6 text-lg rounded-full font-bold">
+          <Button 
+            onClick={() => router.push('/dashboard/employer/post-job')}
+            size="lg" 
+            variant="outline" 
+            className="border-white text-white hover:bg-white/10 px-8 py-6 text-lg rounded-full font-bold"
+          >
             Post a Job
           </Button>
         </motion.div>
@@ -84,6 +118,8 @@ const HeroSection = () => {
             <Search className="text-gray-400 mr-2 w-5 h-5" />
             <input 
               type="text" 
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               placeholder="Job title, keywords..." 
               className="w-full bg-transparent border-none focus:ring-0 text-gray-800 dark:text-zinc-100 placeholder:text-gray-400"
             />
@@ -92,11 +128,16 @@ const HeroSection = () => {
             <MapPin className="text-gray-400 mr-2 w-5 h-5" />
             <input 
               type="text" 
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
               placeholder="City, remote..." 
               className="w-full bg-transparent border-none focus:ring-0 text-gray-800 dark:text-zinc-100 placeholder:text-gray-400"
             />
           </div>
-          <Button className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-bold transition-all whitespace-nowrap">
+          <Button 
+            onClick={handleSearch}
+            className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-bold transition-all whitespace-nowrap"
+          >
             Search Jobs
           </Button>
         </motion.div>
@@ -110,7 +151,11 @@ const HeroSection = () => {
         >
           <span>Popular:</span>
           {["React Developer", "UI Designer", "Data Scientist", "Product Manager"].map((tag) => (
-            <span key={tag} className="text-blue-200 hover:text-white cursor-pointer transition-colors underline underline-offset-4 decoration-blue-500/30">
+            <span 
+              key={tag} 
+              onClick={() => router.push(`/jobs?search=${tag}`)}
+              className="text-blue-200 hover:text-white cursor-pointer transition-colors underline underline-offset-4 decoration-blue-500/30"
+            >
               {tag}
             </span>
           ))}
@@ -124,19 +169,19 @@ const HeroSection = () => {
           className="mt-16 pt-8 border-t border-white/10 flex flex-wrap justify-center gap-8 md:gap-16 text-white/80"
         >
           <div className="flex flex-col">
-            <span className="text-2xl font-bold text-white">50K+</span>
+            <span className="text-2xl font-bold text-white">{(serverStats?.jobs || 0).toLocaleString()}+</span>
             <span className="text-xs uppercase tracking-wider text-white/50">Jobs Listed</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-2xl font-bold text-white">10K+</span>
+            <span className="text-2xl font-bold text-white">{(serverStats?.companies || 0).toLocaleString()}+</span>
             <span className="text-xs uppercase tracking-wider text-white/50">Companies</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-2xl font-bold text-white">200K+</span>
+            <span className="text-2xl font-bold text-white">{(serverStats?.jobSeekers || 0).toLocaleString()}+</span>
             <span className="text-xs uppercase tracking-wider text-white/50">Job Seekers</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-2xl font-bold text-white">95%</span>
+            <span className="text-2xl font-bold text-white">{serverStats?.successRate || 95}%</span>
             <span className="text-xs uppercase tracking-wider text-white/50">Success Rate</span>
           </div>
         </motion.div>

@@ -1,10 +1,13 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@/components/ui/Button';
 import { IJob } from '@/types/job';
-import { DollarSign, Calendar, Users, Eye, Bookmark, Share2, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
-// import { motion } from 'framer-motion';
+import { DollarSign, Calendar, Users, Eye, Bookmark, Share2, ArrowRight, ShieldCheck, Zap, CheckCircle2 } from 'lucide-react';
+import { useAuth } from '@/providers/AuthProvider';
+import { useCheckApplication } from '@/hooks/useApplications';
+import { useRouter, usePathname } from 'next/navigation';
+import { toast } from 'react-hot-toast';
 
 interface SidebarProps {
   job: IJob;
@@ -12,11 +15,50 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ job, onApply }: SidebarProps) {
+  const { user, isAuthenticated } = useAuth();
+  const { data: application } = useCheckApplication(job._id);
+  const router = useRouter();
+  const pathname = usePathname();
+  const [isSaved, setIsSaved] = useState(false);
+
+  useEffect(() => {
+     const savedJobs = JSON.parse(localStorage.getItem('hirehub_saved_jobs') || '[]');
+     setIsSaved(savedJobs.includes(job._id));
+  }, [job._id]);
+
+  const toggleBookmark = () => {
+     let savedJobs = JSON.parse(localStorage.getItem('hirehub_saved_jobs') || '[]');
+     if (isSaved) {
+        savedJobs = savedJobs.filter((id: string) => id !== job._id);
+        toast.success('Job removed from saved');
+     } else {
+        savedJobs.push(job._id);
+        toast.success('Job saved!');
+     }
+     localStorage.setItem('hirehub_saved_jobs', JSON.stringify(savedJobs));
+     setIsSaved(!isSaved);
+  };
+
+  const handleApplyClick = () => {
+    if (!isAuthenticated) {
+      router.push(`/login?redirect=${pathname}`);
+      return;
+    }
+    
+    if (user?.role === 'employer') {
+        return;
+    }
+
+    onApply();
+  };
+
   const deadline = new Date(job.deadline).toLocaleDateString('en-US', {
     month: 'long',
     day: 'numeric',
     year: 'numeric'
   });
+
+  const appliedDate = application?.createdAt ? new Date(application.createdAt).toLocaleDateString() : '';
 
   return (
     <aside className="space-y-6 sticky top-24 self-start animate-in fade-in slide-in-from-right-8 duration-700 delay-300">
@@ -64,22 +106,54 @@ export default function Sidebar({ job, onApply }: SidebarProps) {
             </div>
 
             <div className="space-y-3 pt-6">
-               <Button 
-                onClick={onApply}
-                className="w-full h-14 rounded-2xl font-black text-lg gap-2.5 shadow-xl shadow-primary/20 group/btn relative overflow-hidden group active:scale-[0.98] transition-all"
-               >
-                 <span className="relative z-10 flex items-center gap-2">
-                   Apply Now 
-                   <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
-                 </span>
-                 <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-               </Button>
-               <div className="grid grid-cols-2 gap-3">
-                 <Button variant="outline" className="h-12 rounded-2xl font-bold gap-2 group hover:border-primary/40 hover:bg-primary/5">
-                    <Bookmark className="w-4 h-4 group-hover:fill-primary group-hover:text-primary transition-all" />
-                    Save Job
+               {isAuthenticated && user?.role === 'employer' ? (
+                 <div className="p-4 bg-muted border border-border rounded-2xl flex items-center gap-3 text-muted-foreground">
+                   <ShieldCheck className="w-5 h-5" />
+                   <p className="text-sm font-bold">You are viewing as an Employer</p>
+                 </div>
+               ) : application ? (
+                 <Button 
+                  disabled
+                  className="w-full h-14 rounded-2xl font-black text-lg gap-2.5 bg-green-600 text-white shadow-xl shadow-green-600/20"
+                 >
+                   <CheckCircle2 className="w-6 h-6" />
+                   Applied on {appliedDate}
                  </Button>
-                 <Button variant="outline" className="h-12 rounded-2xl font-bold gap-2 group hover:border-primary/40 hover:bg-primary/5">
+               ) : (
+                 <Button 
+                  onClick={handleApplyClick}
+                  className="w-full h-14 rounded-2xl font-black text-lg gap-2.5 shadow-xl shadow-primary/20 group/btn relative overflow-hidden group active:scale-[0.98] transition-all"
+                 >
+                   <span className="relative z-10 flex items-center gap-2">
+                     Apply Now 
+                     <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+                   </span>
+                   <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                 </Button>
+               )}
+               
+               <div className="grid grid-cols-2 gap-3">
+                 <Button 
+                  onClick={toggleBookmark}
+                  variant="outline" 
+                  className={`h-12 rounded-2xl font-bold gap-2 group hover:border-primary/40 hover:bg-primary/5 ${isSaved ? 'text-primary border-primary/40 bg-primary/5' : ''}`}
+                 >
+                    <Bookmark className={`w-4 h-4 group-hover:fill-primary group-hover:text-primary transition-all ${isSaved ? 'fill-primary text-primary' : ''}`} />
+                    {isSaved ? 'Saved' : 'Save Job'}
+                 </Button>
+                 <Button 
+                  onClick={() => {
+                    navigator.share?.({
+                      title: job.title,
+                      url: window.location.href
+                    }).catch(() => {
+                      navigator.clipboard.writeText(window.location.href);
+                      toast.success('Link copied to clipboard!');
+                    });
+                  }}
+                  variant="outline" 
+                  className="h-12 rounded-2xl font-bold gap-2 group hover:border-primary/40 hover:bg-primary/5"
+                 >
                     <Share2 className="w-4 h-4 group-hover:text-primary transition-all" />
                     Share
                  </Button>

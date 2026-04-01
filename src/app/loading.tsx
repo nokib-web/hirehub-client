@@ -12,8 +12,11 @@ export default function Loading() {
              <Briefcase className="w-8 h-8 text-primary animate-bounce shadow-primary drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]" />
           </div>
         </div>
-        <p className="font-black text-sm uppercase tracking-widest text-primary animate-pulse relative z-10 font-sans">
-          Loading Data...
+        <p className="font-bold text-lg text-primary animate-pulse relative z-10">
+          Waking up HireHub server...
+        </p>
+        <p className="text-muted-foreground text-xs uppercase tracking-widest animate-pulse relative z-10 font-medium">
+          Please wait a moment
         </p>
       </div>
     </div>

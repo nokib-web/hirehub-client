@@ -5,24 +5,27 @@ import { X, Sparkles, Loader2, Send, CheckCircle2, FileText, Globe, DollarSign }
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import { motion, AnimatePresence } from 'framer-motion';
-import axios from 'axios';
+import api from '@/lib/axios';
 import { toast } from 'react-hot-toast';
+import { useSubmitApplication } from '@/hooks/useApplications';
 
 interface ApplicationModalProps {
   isOpen: boolean;
   onClose: () => void;
+  jobId: string;
   jobTitle: string;
   companyName: string;
 }
 
-export default function ApplicationModal({ isOpen, onClose, jobTitle, companyName }: ApplicationModalProps) {
+export default function ApplicationModal({ isOpen, onClose, jobId, jobTitle, companyName }: ApplicationModalProps) {
   const [resumeUrl, setResumeUrl] = useState('');
   const [coverLetter, setCoverLetter] = useState('');
   const [portfolioUrl, setPortfolioUrl] = useState('');
   const [expectedSalary, setExpectedSalary] = useState('');
   const [isImproving, setIsImproving] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  
+  const submitMutation = useSubmitApplication();
 
   const improveCoverLetter = async () => {
     if (!coverLetter || coverLetter.length < 50) {
@@ -32,15 +35,16 @@ export default function ApplicationModal({ isOpen, onClose, jobTitle, companyNam
 
     setIsImproving(true);
     try {
-      const response = await axios.post('https://hirehub-server-ydm5.onrender.com/api/ai/improve-cover-letter', {
+      const response = await api.post('/ai/improve-cover-letter', {
         coverLetter,
         jobTitle,
+        company: companyName
       });
       setCoverLetter(response.data.data.improvedCoverLetter);
       toast.success('Cover letter improved! ✨');
     } catch (error) {
       console.error(error);
-      toast.error('Failed to improve cover letter');
+      toast.error('AI is unavailable, please try again');
     } finally {
       setIsImproving(false);
     }
@@ -53,20 +57,26 @@ export default function ApplicationModal({ isOpen, onClose, jobTitle, companyNam
       return;
     }
 
-    setIsSubmitting(true);
-    try {
-      // API call to submit application
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate
-      setIsSuccess(true);
-      setTimeout(() => {
-        onClose();
-        setIsSuccess(false);
-      }, 3000);
-    } catch {
-      toast.error('Submission failed');
-    } finally {
-      setIsSubmitting(false);
-    }
+    submitMutation.mutate({
+      jobId,
+      resumeUrl,
+      coverLetter,
+      portfolioUrl,
+      expectedSalary
+    }, {
+      onSuccess: () => {
+        setIsSuccess(true);
+        setTimeout(() => {
+          onClose();
+          setIsSuccess(false);
+          // Clear form
+          setResumeUrl('');
+          setCoverLetter('');
+          setPortfolioUrl('');
+          setExpectedSalary('');
+        }, 3000);
+      }
+    });
   };
 
   return (
@@ -175,17 +185,17 @@ export default function ApplicationModal({ isOpen, onClose, jobTitle, companyNam
                     />
                     <div className="flex justify-between items-center px-1">
                       <p className={`text-[11px] font-bold ${coverLetter.length < 100 ? 'text-orange-500' : 'text-green-600'}`}>
-                        {coverLetter.length} / 100 characters minimum
+                        {coverLetter.length} / 100 minimum
                       </p>
                     </div>
                   </div>
 
                   <div className="pt-4 border-t border-border flex items-center justify-end gap-3">
-                    <Button type="button" variant="outline" onClick={onClose} disabled={isSubmitting} className="h-11 px-6">
+                    <Button type="button" variant="outline" onClick={onClose} disabled={submitMutation.isPending} className="h-11 px-6">
                       Cancel
                     </Button>
-                    <Button type="submit" disabled={isSubmitting} className="h-11 px-8 gap-2 group/sub relative overflow-hidden">
-                      {isSubmitting ? (
+                    <Button type="submit" disabled={submitMutation.isPending} className="h-11 px-8 gap-2 group/sub relative overflow-hidden">
+                      {submitMutation.isPending ? (
                         <Loader2 className="w-4 h-4 animate-spin" />
                       ) : (
                         <>

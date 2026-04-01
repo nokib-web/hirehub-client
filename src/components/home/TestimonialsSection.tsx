@@ -1,77 +1,97 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, Quote, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const testimonials = [
   {
-    name: "John Doe",
-    role: "Software Engineer",
-    company: "Google",
+    name: "Sarah Chen",
+    role: "Frontend Developer",
+    company: "Hired at DataFlow Inc",
+    location: "San Francisco, CA",
     rating: 5,
-    quote: "HireHub helped me land my dream job at Google! The process was seamless and the recommendations were top-notch. I couldn't be happier with the outcome.",
-    avatar: "https://api.deerecho.pe/storage/images/f3c92131-000c-4467-8534-118833918a99.webp"
+    text: "I landed my dream job within 3 weeks of using HireHub. The AI career assistant helped me tailor my cover letter perfectly for each application.",
+    initials: "SC",
+    color: "bg-blue-500"
   },
   {
-    name: "Jane Smith",
-    role: "Product Designer",
-    company: "Meta",
+    name: "Marcus Johnson",
+    role: "Product Manager",
+    company: "Hired at GrowthBase",
+    location: "Austin, TX",
     rating: 5,
-    quote: "As a designer, I appreciate the clean and intuitive user interface of HireHub. It made my job search much more enjoyable and efficient.",
-    avatar: "https://api.deerecho.pe/storage/images/f3c92131-000c-4467-8534-118833918a99.webp"
+    text: "As someone switching careers, HireHub's job matching was incredibly accurate. I got 4 interviews in my first week.",
+    initials: "MJ",
+    color: "bg-green-500"
   },
   {
-    name: "Sarah Johnson",
+    name: "Priya Patel",
+    role: "UX Designer",
+    company: "Hired at Craftly Studio",
+    location: "New York, NY",
+    rating: 5,
+    text: "The salary guide helped me negotiate 15% above the initial offer. I would not have known my market value without it.",
+    initials: "PP",
+    color: "bg-purple-500"
+  },
+  {
+    name: "James Rivera",
     role: "Data Scientist",
-    company: "Amazon",
+    company: "Hired at Nexus Analytics",
+    location: "Seattle, WA",
     rating: 5,
-    quote: "HireHub's platform is a game-changer for job seekers. I found a role that perfectly matches my skills and career goals. Highly recommend!",
-    avatar: "https://api.deerecho.pe/storage/images/f3c92131-000c-4467-8534-118833918a99.webp"
+    text: "HireHub connected me with companies I had never heard of but were perfect fits for my skills. Best job search experience I have had.",
+    initials: "JR",
+    color: "bg-orange-500"
   },
   {
-    name: "Michael Brown",
-    role: "Backend Developer",
-    company: "Netflix",
+    name: "Emma Williams",
+    role: "Backend Engineer",
+    company: "Hired at CloudStack",
+    location: "Remote",
     rating: 5,
-    quote: "The personalized job alerts on HireHub are fantastic. I was notified of a great opportunity and now I'm working with an amazing team at Netflix.",
-    avatar: "https://api.deerecho.pe/storage/images/f3c92131-000c-4467-8534-118833918a99.webp"
+    text: "Applied to 8 jobs on Monday. Had 3 interviews by Friday. The filtering system is incredibly accurate.",
+    initials: "EW",
+    color: "bg-pink-500"
   },
   {
-    name: "Emily Davis",
-    role: "UX Researcher",
-    company: "Microsoft",
+    name: "Ahmed Hassan",
+    role: "DevOps Engineer",
+    company: "Hired at Infratech",
+    location: "Chicago, IL",
     rating: 5,
-    quote: "HireHub provides a range of helpful tools for job seekers. I used their resume builder and interview tips, and it made a big difference in my applications.",
-    avatar: "https://api.deerecho.pe/storage/images/f3c92131-000c-4467-8534-118833918a99.webp"
-  },
-  {
-    name: "Robert Wilson",
-    role: "Cloud Architect",
-    company: "Tesla",
-    rating: 5,
-    quote: "HireHub is the best job platform I've ever used. The quality of the job listings and the support from the team are outstanding. I highly recommend it!",
-    avatar: "https://api.deerecho.pe/storage/images/f3c92131-000c-4467-8534-118833918a99.webp"
+    text: "The employer dashboard made it so easy to review applications. We hired our entire engineering team through HireHub in 6 weeks.",
+    initials: "AH",
+    color: "bg-teal-500"
   }
 ];
 
 const TestimonialsSection = () => {
   const [index, setIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setIndex((prev) => (prev + 1) % testimonials.length);
-    }, 5000);
-    return () => clearInterval(timer);
+  const handleNext = useCallback(() => {
+    setIndex((prev) => (prev + 1) % testimonials.length);
   }, []);
 
-  const handlePrev = () => {
+  const handlePrev = useCallback(() => {
     setIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  }, []);
+
+  const goToSlide = (slideIndex: number) => {
+    setIndex(slideIndex);
   };
 
-  const handleNext = () => {
-    setIndex((prev) => (prev + 1) % testimonials.length);
-  };
+  useEffect(() => {
+    if (isPaused) return;
+    
+    const timer = setInterval(() => {
+      handleNext();
+    }, 4000);
+    
+    return () => clearInterval(timer);
+  }, [isPaused, handleNext]);
 
   return (
     <section className="py-24 bg-blue-50 dark:bg-zinc-950/50 overflow-hidden">
@@ -93,15 +113,19 @@ const TestimonialsSection = () => {
           />
         </div>
 
-        <div className="relative">
+        <div 
+          className="relative"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
           <AnimatePresence mode="wait">
             <motion.div
               key={index}
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -50 }}
-              transition={{ duration: 0.5 }}
-              className="bg-white dark:bg-zinc-900 rounded-[32px] p-8 md:p-16 shadow-[0_30px_60px_-12px_rgba(0,0,0,0.1)] dark:shadow-none border border-zinc-100 dark:border-zinc-800 text-center relative"
+              transition={{ duration: 0.5, ease: "easeInOut" }}
+              className="bg-white dark:bg-zinc-900 rounded-[32px] p-8 md:p-16 shadow-[0_30px_60px_-12px_rgba(0,0,0,0.1)] dark:shadow-none border border-zinc-100 dark:border-zinc-800 text-center relative min-h-[500px] flex flex-col justify-center"
             >
               <div className="absolute top-10 left-10 text-blue-100 dark:text-zinc-800 -z-0">
                 <Quote size={80} fill="currentColor" />
@@ -115,22 +139,21 @@ const TestimonialsSection = () => {
                 </div>
                 
                 <p className="text-xl md:text-2xl text-zinc-700 dark:text-zinc-300 italic mb-10 leading-relaxed font-medium">
-                  &quot;{testimonials[index].quote}&quot;
+                  &quot;{testimonials[index].text}&quot;
                 </p>
                 
                 <div className="flex flex-col items-center">
-                  <div className="w-20 h-20 rounded-full border-4 border-blue-100 dark:border-zinc-800 overflow-hidden mb-4">
-                    <img 
-                      src={testimonials[index].avatar} 
-                      alt={testimonials[index].name} 
-                      className="w-full h-full object-cover"
-                    />
+                  <div className={`w-20 h-20 rounded-full border-4 border-white dark:border-zinc-800 shadow-lg mb-4 flex items-center justify-center text-white text-2xl font-bold ${testimonials[index].color}`}>
+                    {testimonials[index].initials}
                   </div>
                   <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100 mb-1">
                     {testimonials[index].name}
                   </h3>
-                  <p className="text-sm text-blue-600 dark:text-blue-400 font-bold uppercase tracking-widest">
-                    {testimonials[index].role} @ {testimonials[index].company}
+                  <p className="text-sm text-blue-600 dark:text-blue-400 font-bold uppercase tracking-widest mb-1">
+                    {testimonials[index].role}
+                  </p>
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400 font-medium">
+                    {testimonials[index].company} • {testimonials[index].location}
                   </p>
                 </div>
               </div>
@@ -141,21 +164,27 @@ const TestimonialsSection = () => {
           <div className="flex justify-center items-center gap-6 mt-12">
             <button 
               onClick={handlePrev}
-              className="w-12 h-12 rounded-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all shadow-md active:scale-95"
+              className="w-12 h-12 rounded-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all shadow-md active:scale-95 text-zinc-600 dark:text-zinc-400 hover:border-blue-600"
+              aria-label="Previous testimonial"
             >
               <ChevronLeft className="w-6 h-6" />
             </button>
-            <div className="flex gap-2">
+            
+            <div className="flex gap-3">
               {testimonials.map((_, i) => (
-                <div 
+                <button 
                   key={i} 
-                  className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${i === index ? 'bg-blue-600 w-8' : 'bg-zinc-300 dark:bg-zinc-800'}`} 
+                  onClick={() => goToSlide(i)}
+                  className={`h-2.5 rounded-full transition-all duration-300 ${i === index ? 'bg-blue-600 w-8' : 'bg-zinc-300 dark:bg-zinc-800 w-2.5 hover:bg-zinc-400'}`}
+                  aria-label={`Go to slide ${i + 1}`}
                 />
               ))}
             </div>
+            
             <button 
               onClick={handleNext}
-              className="w-12 h-12 rounded-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all shadow-md active:scale-95"
+              className="w-12 h-12 rounded-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all shadow-md active:scale-95 text-zinc-600 dark:text-zinc-400 hover:border-blue-600"
+              aria-label="Next testimonial"
             >
               <ChevronRight className="w-6 h-6" />
             </button>

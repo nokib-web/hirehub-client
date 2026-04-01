@@ -5,6 +5,7 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import AIChatbot from './AIChatbot';
 import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
 const LayoutWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const pathname = usePathname();
@@ -15,11 +16,11 @@ const LayoutWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   return (
     <>
       {!isDashboardRoute && <Navbar />}
-      <main className={!isDashboardRoute ? "pt-24" : "min-h-screen"}>
+      <main className={cn(!isDashboardRoute ? "pt-24" : "min-h-screen", "relative z-0")}>
         {children}
       </main>
-      {!isDashboardRoute && <AIChatbot />}
       {!isDashboardRoute && <Footer />}
+      {!isDashboardRoute && <AIChatbot />}
     </>
   );
 };

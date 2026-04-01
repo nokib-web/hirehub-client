@@ -63,7 +63,7 @@ const Navbar = () => {
   return (
     <nav 
       className={cn(
-        "fixed top-0 left-0 right-0 z-[100] transition-all duration-300 border-b",
+        "fixed top-0 left-0 right-0 z-[1000] transition-all duration-300 border-b",
         isScrolled 
           ? "bg-background/80 backdrop-blur-md border-border py-2 shadow-sm" 
           : "bg-background border-transparent py-4"
@@ -100,7 +100,7 @@ const Navbar = () => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
-                    className="absolute top-full -left-20 w-[600px] bg-card border border-border rounded-2xl shadow-2xl p-6 overflow-hidden z-[200]"
+                    className="absolute top-full -left-20 w-[600px] bg-white dark:bg-zinc-900 border border-border rounded-2xl shadow-2xl p-6 overflow-hidden z-[200]"
                   >
                     <div className="grid grid-cols-3 gap-8">
                       {/* Categories */}
@@ -200,7 +200,7 @@ const Navbar = () => {
                 <Link href="/login">
                   <Button variant="outline" className="rounded-xl font-bold">Login</Button>
                 </Link>
-                <Link href="/jobs/new">
+                <Link href="/dashboard/post-job">
                   <Button variant="primary" className="rounded-xl font-bold shadow-lg shadow-primary/20">Post a Job</Button>
                 </Link>
               </>
@@ -243,7 +243,7 @@ const Navbar = () => {
                         </div>
                         
                         <div className="p-1 space-y-1 mt-2">
-                          <Link href="/profile" className="flex items-center space-x-3 px-3 py-2 text-sm font-medium hover:bg-primary/10 hover:text-primary rounded-xl transition-colors">
+                          <Link href="/dashboard/profile" className="flex items-center space-x-3 px-3 py-2 text-sm font-medium hover:bg-primary/10 hover:text-primary rounded-xl transition-colors">
                             <User className="w-4 h-4" /> <span>My Profile</span>
                           </Link>
                           <Link href="/dashboard" className="flex items-center space-x-3 px-3 py-2 text-sm font-medium hover:bg-primary/10 hover:text-primary rounded-xl transition-colors">
@@ -251,19 +251,15 @@ const Navbar = () => {
                           </Link>
                           
                           {user?.role === 'jobseeker' && (
-                            <Link href="/dashboard/applications" className="flex items-center space-x-3 px-3 py-2 text-sm font-medium hover:bg-primary/10 hover:text-primary rounded-xl transition-colors">
+                            <Link href="/dashboard/my-applications" className="flex items-center space-x-3 px-3 py-2 text-sm font-medium hover:bg-primary/10 hover:text-primary rounded-xl transition-colors">
                               <FileText className="w-4 h-4" /> <span>My Applications</span>
                             </Link>
                           )}
                           {user?.role === 'employer' && (
-                            <Link href="/dashboard/jobs" className="flex items-center space-x-3 px-3 py-2 text-sm font-medium hover:bg-primary/10 hover:text-primary rounded-xl transition-colors">
+                            <Link href="/dashboard/my-jobs" className="flex items-center space-x-3 px-3 py-2 text-sm font-medium hover:bg-primary/10 hover:text-primary rounded-xl transition-colors">
                               <Briefcase className="w-4 h-4" /> <span>My Job Posts</span>
                             </Link>
                           )}
-                          
-                          <Link href="/settings" className="flex items-center space-x-3 px-3 py-2 text-sm font-medium hover:bg-primary/10 hover:text-primary rounded-xl transition-colors">
-                            <Settings className="w-4 h-4" /> <span>Settings</span>
-                          </Link>
                         </div>
                         
                         <div className="p-1 mt-2 pt-2 border-t border-border/50">
@@ -311,7 +307,7 @@ const Navbar = () => {
                     <Link href="/login" onClick={() => setIsOpen(false)}>
                       <Button variant="outline" className="w-full font-bold py-3">Login</Button>
                     </Link>
-                    <Link href="/register" onClick={() => setIsOpen(false)}>
+                    <Link href="/dashboard/post-job" onClick={() => setIsOpen(false)}>
                       <Button variant="primary" className="w-full font-bold py-3 shadow-lg">Post a Job</Button>
                     </Link>
                    </>

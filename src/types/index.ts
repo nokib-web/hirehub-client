@@ -2,6 +2,7 @@ export type UserRole = 'jobseeker' | 'employer' | 'admin';
 
 export interface IUser {
   id: string;
+  _id?: string;
   name: string;
   email: string;
   role: UserRole;
@@ -15,36 +16,8 @@ export interface IUser {
   createdAt: string;
 }
 
-export interface IJob {
-  id: string;
-  _id?: string;
-  title: string;
-  company: string;
-  companyLogo?: string;
-  location: string;
-  locationType: 'Remote' | 'On-site' | 'Hybrid';
-  type: string;
-  category: string;
-  salary: {
-    min: number;
-    max: number;
-    currency: string;
-    period: 'hourly' | 'monthly' | 'yearly';
-  };
-  description: string;
-  requirements: string[];
-  responsibilities?: string[];
-  skills: string[];
-  benefits?: string[];
-  experience: string;
-  deadline: string;
-  status: 'active' | 'closed' | 'draft';
-  applicantsCount: number;
-  views: number;
-  isFeatured: boolean;
-  createdBy: string | IUser;
-  createdAt: string;
-}
+import { IJob } from './job';
+export * from './job';
 
 export interface IApplication {
   id: string;
@@ -53,6 +26,7 @@ export interface IApplication {
   userId: string | IUser;
   job?: IJob;
   user?: IUser;
+  applicant?: IUser;
   resumeUrl: string;
   coverLetter: string;
   portfolioUrl?: string;

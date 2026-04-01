@@ -1,37 +1,27 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { motion, useMotionValue, useSpring, useInView } from 'framer-motion';
-
-const stats = [
-  { label: 'Jobs Listed', value: 50000, suffix: '+' },
-  { label: 'Companies', value: 10000, suffix: '+' },
-  { label: 'Job Seekers', value: 200000, suffix: '+' },
-  { label: 'Hiring Success Rate', value: 95, suffix: '%' },
-];
+import React, { useEffect, useState, useRef } from 'react';
+import { motion, animate, useInView } from 'framer-motion';
+import { useQuery } from '@tanstack/react-query';
+import api from '@/lib/axios';
 
 const AnimatedCounter = ({ value, suffix }: { value: number; suffix: string }) => {
   const [displayValue, setDisplayValue] = useState(0);
-  const ref = React.useRef(null);
+  const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   
-  const motionValue = useMotionValue(0);
-  const springValue = useSpring(motionValue, {
-    damping: 30,
-    stiffness: 100,
-  });
-
   useEffect(() => {
     if (isInView) {
-      motionValue.set(value);
+      const controls = animate(0, value, {
+        duration: 2,
+        ease: "easeOut",
+        onUpdate: (latest) => {
+          setDisplayValue(Math.floor(latest));
+        },
+      });
+      return () => controls.stop();
     }
-  }, [isInView, value, motionValue]);
-
-  useEffect(() => {
-    return springValue.on("change", (latest) => {
-      setDisplayValue(Math.floor(latest));
-    });
-  }, [springValue]);
+  }, [isInView, value]);
 
   return (
     <span ref={ref}>
@@ -42,6 +32,37 @@ const AnimatedCounter = ({ value, suffix }: { value: number; suffix: string }) =
 };
 
 const StatsSection = () => {
+  const { data: serverStats, isLoading } = useQuery({
+    queryKey: ['platform-stats'],
+    queryFn: async () => {
+      const response = await api.get('/jobs/stats');
+      return response.data.data;
+    },
+  });
+
+  const stats = [
+    { 
+      label: "Jobs Listed", 
+      value: serverStats?.jobs || 0,
+      suffix: "+"
+    },
+    { 
+      label: "Companies Hiring", 
+      value: serverStats?.companies || 0, 
+      suffix: "+" 
+    },
+    { 
+      label: "Job Seekers", 
+      value: serverStats?.jobSeekers || 0, 
+      suffix: "+" 
+    },
+    { 
+      label: "Hiring Success Rate", 
+      value: serverStats?.successRate || 95, 
+      suffix: "%" 
+    }
+  ];
+
   return (
     <section className="relative py-24 overflow-hidden">
       {/* Background with blue-violet gradient */}
@@ -63,7 +84,7 @@ const StatsSection = () => {
               <h3 className="text-4xl md:text-6xl font-extrabold tracking-tight">
                 <AnimatedCounter value={stat.value} suffix={stat.suffix} />
               </h3>
-              <p className="text-blue-100/70 text-lg font-medium uppercase tracking-[3px] text-sm">
+              <p className="text-blue-100/70 text-lg font-medium uppercase tracking-[3px]">
                 {stat.label}
               </p>
             </motion.div>

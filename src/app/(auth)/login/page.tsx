@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -39,6 +40,9 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema) as any,
   });
 
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get('redirect') || undefined;
+
   const onSubmit = async (data: LoginFormValues) => {
     setIsSubmitting(true);
     try {
@@ -54,7 +58,7 @@ export default function LoginPage() {
         throw new Error(result.message || 'Login failed');
       }
 
-      login(result.data.accessToken);
+      login(result.data.accessToken, redirect);
       toast.success('Welcome back! 🎉');
     } catch (error) {
       const err = error as Error;

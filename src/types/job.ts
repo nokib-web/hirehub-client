@@ -6,6 +6,7 @@ export type IJobStatus = 'active' | 'closed' | 'draft';
 
 export interface IJob {
   _id: string; // From MongoDB
+  id: string;
   title: string;
   company: string;
   companyLogo?: string;
@@ -30,6 +31,7 @@ export interface IJob {
   applicantsCount: number;
   views: number;
   isFeatured: boolean;
+  createdBy: string | { _id? : string, id: string, name: string };
   createdAt: string;
   updatedAt: string;
 }

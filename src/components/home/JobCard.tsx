@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { MapPin, Clock, Bookmark } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
@@ -77,9 +78,11 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
         </button>
       </div>
 
-      <h3 className="text-lg font-bold text-gray-900 dark:text-zinc-100 mb-2 line-clamp-1 hover:text-blue-600 transition-colors cursor-pointer">
-        {title}
-      </h3>
+      <Link href={`/jobs/${job._id || job.id}`}>
+        <h3 className="text-lg font-bold text-gray-900 dark:text-zinc-100 mb-2 line-clamp-1 hover:text-blue-600 transition-colors cursor-pointer">
+          {title}
+        </h3>
+      </Link>
 
       <div className="flex flex-wrap items-center gap-y-2 gap-x-4 mb-4 text-sm text-gray-500 dark:text-gray-400">
         <div className="flex items-center gap-1">
@@ -115,9 +118,11 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
         <span className="text-xs text-gray-400 italic">
           {timeAgo}
         </span>
-        <Button size="sm" className="px-5 rounded-lg font-bold">
-          Apply Now
-        </Button>
+        <Link href={`/jobs/${job._id || job.id}`}>
+          <Button size="sm" className="px-5 rounded-lg font-bold">
+            Apply Now
+          </Button>
+        </Link>
       </div>
     </motion.div>
   );

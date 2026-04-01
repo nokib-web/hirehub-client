@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, notFound } from 'next/navigation';
 import { useJob } from '@/hooks/useJobs';
 import JobHeader from '@/components/jobs/detail/JobHeader';
 import JobTabs from '@/components/jobs/detail/JobTabs';
@@ -19,29 +19,35 @@ export default function JobDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[70vh] gap-4">
-        <Loader2 className="w-12 h-12 text-primary animate-spin" />
-        <p className="text-muted-foreground font-bold uppercase tracking-widest text-xs animate-pulse">Loading Job Details...</p>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-20 animate-pulse">
+        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
+          <div className="flex-1 space-y-12">
+            {/* Header Skeleton */}
+            <div className="space-y-4">
+              <div className="h-8 bg-muted rounded-xl w-3/4" />
+              <div className="flex gap-4">
+                <div className="h-4 bg-muted rounded-lg w-32" />
+                <div className="h-4 bg-muted rounded-lg w-32" />
+              </div>
+            </div>
+            {/* Tabs Skeleton */}
+            <div className="h-10 bg-muted rounded-xl w-full" />
+            <div className="space-y-6">
+              <div className="h-32 bg-muted rounded-2xl w-full" />
+              <div className="h-32 bg-muted rounded-2xl w-full" />
+            </div>
+          </div>
+          <div className="lg:w-[380px] space-y-6">
+            <div className="h-96 bg-muted rounded-3xl w-full" />
+            <div className="h-32 bg-muted rounded-3xl w-full" />
+          </div>
+        </div>
       </div>
     );
   }
 
   if (isError || !job) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[70vh] text-center p-6 bg-card border border-border/40 rounded-3xl max-w-lg mx-auto mt-20 shadow-2xl">
-        <div className="w-20 h-20 bg-red-100 dark:bg-red-950/30 rounded-full flex items-center justify-center text-red-600 mb-6 scale-110">
-          <Inbox className="w-10 h-10" />
-        </div>
-        <h3 className="text-3xl font-black text-foreground mb-3 leading-tight uppercase tracking-tight">Oops! Job not found</h3>
-        <p className="text-muted-foreground max-w-sm mb-8 text-base font-medium leading-relaxed">
-          The job you&apos;re looking for might have been closed or removed by the employer.
-        </p>
-        <Button onClick={() => router.push('/jobs')} className="px-10 h-14 rounded-2xl font-black gap-3 group">
-          <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-          Browse All Jobs
-        </Button>
-      </div>
-    );
+    notFound();
   }
 
   return (
@@ -73,6 +79,7 @@ export default function JobDetailPage() {
       <ApplicationModal 
         isOpen={isApplyModalOpen}
         onClose={() => setIsApplyModalOpen(false)}
+        jobId={job._id}
         jobTitle={job.title}
         companyName={job.company}
       />

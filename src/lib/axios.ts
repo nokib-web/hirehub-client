@@ -1,11 +1,18 @@
 import axios from 'axios';
 
+const baseURL = process.env.NEXT_PUBLIC_API_URL || 'https://hirehub-server-ydm5.onrender.com/api';
+
+if (process.env.NODE_ENV === 'development') {
+  console.log('📡 HireHub API Base URL:', baseURL);
+}
+
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://hirehub-server-ydm5.onrender.com/api',
+  baseURL,
   headers: {
     'Content-Type': 'application/json',
   },
 });
+
 
 api.interceptors.request.use(
   (config) => {
