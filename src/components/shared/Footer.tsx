@@ -3,8 +3,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { 
-  Briefcase, Linkedin, Twitter, 
-  Facebook, Instagram, Mail, 
+  Briefcase, Linkedin, 
+  Facebook, Mail, 
   Phone, MapPin, ChevronRight,
   Github,
   Signature
