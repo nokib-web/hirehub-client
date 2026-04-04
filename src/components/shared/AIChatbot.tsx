@@ -47,7 +47,7 @@ export default function AIChatbot() {
         parts: m.content
       }))
 
-      const response = await axios.post('/api/ai/chat', {
+      const response = await axios.post('/ai/chat', {
         message: text.trim(),
         history
       })
