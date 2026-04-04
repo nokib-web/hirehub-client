@@ -63,11 +63,12 @@ const Navbar = () => {
   return (
     <nav 
       className={cn(
-        "fixed top-0 left-0 right-0 z-[1000] transition-all duration-300 border-b",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b",
         isScrolled 
           ? "bg-background/80 backdrop-blur-md border-border py-2 shadow-sm" 
           : "bg-background border-transparent py-4"
       )}
+      style={{ zIndex: 99999 }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
@@ -213,7 +214,7 @@ const Navbar = () => {
                 
                 {/* Profile Avatar Dropdown */}
                 <div 
-                  className="relative group"
+                  className="relative group z-50"
                   onMouseEnter={() => setActiveDropdown('profile')}
                   onMouseLeave={() => setActiveDropdown(null)}
                 >
@@ -234,7 +235,8 @@ const Navbar = () => {
                         initial={{ opacity: 0, y: 10, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                        className="absolute top-full right-0 mt-2 w-56 bg-card border border-border rounded-2xl shadow-2xl p-2 z-[110]"
+                        className="absolute top-full right-0 mt-2 w-56 bg-card border border-border rounded-2xl shadow-2xl p-2 z-50"
+                        style={{ zIndex: 99999 }}
                       >
                         <div className="px-4 py-3 border-b border-border/50">
                           <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest uppercase mb-1">Signed in as</p>

@@ -14,7 +14,7 @@ const handler = NextAuth({
       if (account?.provider === "google") {
         try {
           // You would typically sync this with your backend here
-          // const response = await fetch('https://hirehub-server-ydm5.onrender.com/api/auth/google', {
+          // const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://hirehub-server-ydm5.onrender.com/api'}/auth/google`, {
           //   method: 'POST',
           //   headers: { 'Content-Type': 'application/json' },
           //   body: JSON.stringify({ email: user.email, name: user.name, image: user.image }),
