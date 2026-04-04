@@ -74,27 +74,38 @@ const CategorySection = () => {
             Explore diverse opportunities across various industries tailored to your skills.
           </motion.p>
         </div>
+      </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-          {isLoading ? (
-            Array(10).fill(0).map((_, i) => (
-              <div key={i} className="animate-pulse bg-zinc-50 dark:bg-zinc-900 h-48 rounded-2xl" />
-            ))
-          ) : (
-            serverStats.map((cat, index) => {
+      <div className="overflow-hidden whitespace-nowrap relative border-0 py-4 w-full group/marquee">
+        <style dangerouslySetInnerHTML={{__html: `
+          @keyframes marquee-rtl {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+          }
+          .animate-marquee-rtl {
+            animation: marquee-rtl 40s linear infinite;
+          }
+          .group\\/marquee:hover .animate-marquee-rtl {
+            animation-play-state: paused;
+          }
+        `}} />
+        {isLoading ? (
+          <div className="flex gap-6 w-max px-4">
+            {Array(10).fill(0).map((_, i) => (
+              <div key={i} className="animate-pulse bg-zinc-50 dark:bg-zinc-900 h-48 w-[240px] shrink-0 rounded-2xl" />
+            ))}
+          </div>
+        ) : (
+          <div className="flex gap-6 w-max px-4 animate-marquee-rtl">
+            {[...serverStats, ...serverStats, ...serverStats].map((cat, index) => {
               const Icon = CATEGORY_ICONS[cat.name] || Laptop;
               const color = CATEGORY_COLORS[cat.name] || 'bg-blue-100 text-blue-600';
               
               return (
-                <motion.div
-                  key={cat.name}
-                  initial={{ opacity: 0, y: 15 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.05 }}
-                  whileHover={{ scale: 1.05 }}
+                <div
+                  key={`${cat.name}-${index}`}
                   onClick={() => window.location.href = `/jobs?category=${cat.name}`}
-                  className="group cursor-pointer bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 p-8 rounded-2xl text-center shadow-sm hover:shadow-xl hover:border-blue-200 dark:hover:border-zinc-700 transition-all"
+                  className="group cursor-pointer bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 p-8 rounded-2xl text-center shadow-sm hover:shadow-xl hover:border-blue-200 dark:hover:border-zinc-700 transition-all w-[240px] shrink-0 whitespace-normal"
                 >
                   <div className={`w-16 h-16 ${color} rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform`}>
                     <Icon className="w-8 h-8" />
@@ -105,11 +116,11 @@ const CategorySection = () => {
                   <p className="text-sm text-gray-500 dark:text-gray-400">
                     {cat.count} open positions
                   </p>
-                </motion.div>
+                </div>
               );
-            })
-          )}
-        </div>
+            })}
+          </div>
+        )}
       </div>
     </section>
   );

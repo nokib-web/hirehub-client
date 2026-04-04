@@ -5,7 +5,9 @@ import Link from 'next/link';
 import { 
   Briefcase, Linkedin, Twitter, 
   Facebook, Instagram, Mail, 
-  Phone, MapPin, ChevronRight
+  Phone, MapPin, ChevronRight,
+  Github,
+  Signature
 } from 'lucide-react';
 
 const Footer = () => {
@@ -36,10 +38,10 @@ const Footer = () => {
   };
 
   const socialIcons = [
-    { icon: <Linkedin className="w-5 h-5 text-gray-500 hover:text-primary transition-colors" />, label: 'LinkedIn', href: '#' },
-    { icon: <Twitter className="w-5 h-5 text-gray-500 hover:text-primary transition-colors" />, label: 'Twitter', href: '#' },
-    { icon: <Facebook className="w-5 h-5 text-gray-500 hover:text-primary transition-colors" />, label: 'Facebook', href: '#' },
-    { icon: <Instagram className="w-5 h-5 text-gray-500 hover:text-primary transition-colors" />, label: 'Instagram', href: '#' },
+    { icon: <Linkedin className="w-5 h-5 text-gray-500 hover:text-primary transition-colors" />, label: 'LinkedIn', href: 'https://www.linkedin.com/in/nazmulhasan-nokib/' },
+    { icon: <Signature className="w-5 h-5 text-gray-500 hover:text-primary transition-colors" />, label: 'Portfolio', href: 'https://nokib.vercel.app/' },
+    { icon: <Facebook className="w-5 h-5 text-gray-500 hover:text-primary transition-colors" />, label: 'Facebook', href: 'https://www.facebook.com/NokibHasan.Nazmul' },
+    { icon: <Github className="w-5 h-5 text-gray-500 hover:text-primary transition-colors" />, label: 'Github', href: 'https://github.com/nokib-web' },
   ];
 
   return (
@@ -137,14 +139,14 @@ const Footer = () => {
             <div className="p-2 bg-background rounded-xl border border-border shadow-sm"><Phone className="w-5 h-5 text-primary" /></div>
             <div>
               <p className="text-xs font-black uppercase text-gray-500">Call Us</p>
-              <p className="text-sm font-bold text-foreground">+1 (555) 000-0000</p>
+              <p className="text-sm font-bold text-foreground">+880 1711 111111</p>
             </div>
           </div>
           <div className="flex items-center space-x-3 text-muted-foreground">
             <div className="p-2 bg-background rounded-xl border border-border shadow-sm"><MapPin className="w-5 h-5 text-primary" /></div>
             <div>
               <p className="text-xs font-black uppercase text-gray-500">Visit Us</p>
-              <p className="text-sm font-bold text-foreground">123 Talent Avenue, NY</p>
+              <p className="text-sm font-bold text-foreground">Mohammadpur, Dhaka, Bangladesh</p>
             </div>
           </div>
         </div>

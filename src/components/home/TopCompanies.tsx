@@ -53,28 +53,39 @@ const TopCompanies = () => {
             Explore Options
           </Button>
         </div>
+      </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
-          {isLoading ? (
-            Array(6).fill(0).map((_, i) => (
-              <div key={i} className="animate-pulse bg-zinc-50 dark:bg-zinc-900 h-64 rounded-3xl" />
-            ))
-          ) : (
-            companies.map((company, index) => (
-              <motion.div
-                key={company.name}
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -5 }}
-                className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 p-8 rounded-3xl text-center flex flex-col items-center justify-between group shadow-sm hover:shadow-xl transition-all h-full"
+      <div className="overflow-hidden whitespace-nowrap relative border-0 py-4 w-full group/marquee">
+        <style dangerouslySetInnerHTML={{__html: `
+          @keyframes marquee-ltr {
+            0% { transform: translateX(-50%); }
+            100% { transform: translateX(0%); }
+          }
+          .animate-marquee-ltr {
+            animation: marquee-ltr 40s linear infinite;
+          }
+          .group\\/marquee:hover .animate-marquee-ltr {
+            animation-play-state: paused;
+          }
+        `}} />
+        {isLoading ? (
+          <div className="flex gap-6 w-max px-4">
+            {Array(6).fill(0).map((_, i) => (
+              <div key={i} className="animate-pulse bg-zinc-50 dark:bg-zinc-900 h-64 w-[280px] sm:w-[320px] shrink-0 rounded-3xl" />
+            ))}
+          </div>
+        ) : (
+          <div className="flex gap-6 w-max px-4 animate-marquee-ltr">
+            {[...companies, ...companies, ...companies].map((company, index) => (
+              <div
+                key={`${company.name}-${index}`}
+                className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 p-8 rounded-3xl text-center flex flex-col items-center justify-between group shadow-sm hover:shadow-xl transition-all h-full w-[280px] sm:w-[320px] shrink-0 whitespace-normal"
               >
                 <div className={`w-20 h-20 ${getCompanyColor(company.name)} rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-black/10 text-white font-bold text-2xl group-hover:rotate-6 transition-transform`}>
                   {company.name.charAt(0)}
                 </div>
                 
-                <div className="mb-6">
+                <div className="mb-6 w-full">
                   <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 mb-1 truncate w-full px-2" title={company.name}>{company.name}</h3>
                   <Badge variant="outline" className="text-[10px] uppercase tracking-widest bg-white dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700 py-0 px-2 font-medium">
                     {company.industry}
@@ -94,10 +105,10 @@ const TopCompanies = () => {
                     View Jobs
                   </Button>
                 </div>
-              </motion.div>
-            ))
-          )}
-        </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
